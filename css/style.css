@@ -144,6 +144,33 @@ table.ptbl tr.tot td { border-top: 2px solid var(--line); font-weight: 600; }
 .tally .n { text-align: right; font-family: var(--f-mono); }
 .empty { color: var(--muted); font-size: 13px; padding: 8px 0; }
 
+/* case library */
+.seg .n { font-family: var(--f-mono); font-size: 11px; opacity: 0.8; }
+#libGroups { flex-wrap: wrap; max-width: 100%; }
+#libQ { flex: 1 1 18em; min-width: 0; }
+.lib { display: grid; gap: 14px; }
+.lib-group { display: grid; gap: 6px; }
+.lib-gh { margin: 0; font-size: 14px; font-weight: 600; padding-left: 10px; border-left: 4px solid var(--line); }
+.lib-gh.g-HW { border-left-color: var(--c-EDC); } .lib-gh.g-SW { border-left-color: var(--c-ACT); } .lib-gh.g-ENV { border-left-color: var(--c-CMS); }
+details.lib-topic { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); min-width: 0; }
+details.lib-topic > summary { cursor: pointer; padding: 8px 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+details.lib-topic[open] > summary { border-bottom: 1px solid var(--line); }
+.lib-tname { font-weight: 600; flex: 1 1 16em; min-width: 0; }
+.lib-in { padding: 10px 12px; display: grid; gap: 10px; min-width: 0; }
+.lib-in p { margin: 0; }
+.lib-desc { font-size: 14px; }
+.lib-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px 16px; }
+.lib-cols ul { margin: 2px 0 0; padding-left: 1.2em; font-size: 13px; }
+.lib-note { display: grid; gap: 4px; }
+.lib-note textarea { font-family: var(--f-ui); font-size: 13px; }
+.lib-cases { display: grid; gap: 8px; }
+.lib-case { border: 1px solid var(--line); border-left: 4px solid var(--gap); background: var(--sunken); border-radius: 8px; padding: 8px 10px; display: grid; gap: 6px; min-width: 0; }
+.lib-case input[type=text] { width: 100%; }
+.lib-sum { margin: 6px 0 0; font-family: var(--f-mono); font-size: 12px; white-space: pre-wrap; overflow-wrap: anywhere; max-height: 280px; overflow: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 8px; }
+.lib-move { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+.lib-move select { max-width: min(28em, 60vw); }
+details.share-box > summary { cursor: pointer; }
+
 /* source chip */
 .chip { display: inline-flex; align-items: center; gap: 5px; font-family: var(--f-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: var(--sc, var(--muted)); }
 .chip::before { content: ""; width: 8px; height: 8px; border-radius: 2px; background: var(--sc, var(--muted)); flex: none; }

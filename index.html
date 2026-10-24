@@ -120,6 +120,29 @@
     <div class="cands" id="cands"></div>
   </section>
 
+  <section class="panel" aria-labelledby="hLib">
+    <div class="panel-head">
+      <h2 id="hLib">Library เคส</h2>
+      <span class="sub" id="libNote"></span>
+    </div>
+    <div class="sub">คู่มือแต่ละหัวข้ออาการ แยกตามกลุ่มสาเหตุ พร้อมเคสจริงที่บันทึกไว้ กด "บันทึกเข้า Library" ในการ์ดจุดผิดปกติเพื่อเก็บเคส (จำไว้ในเบราว์เซอร์นี้)</div>
+    <div class="filters">
+      <div class="seg" role="tablist" id="libGroups" aria-label="กลุ่มสาเหตุ"></div>
+      <input type="text" id="libQ" placeholder="ค้นหาหัวข้อ / เครื่อง / หมายเหตุ / ข้อความในสรุป" aria-label="ค้นหาใน Library">
+      <button type="button" id="libOpenAll">เปิด / ปิดทุกหัวข้อ</button>
+    </div>
+    <div class="lib" id="libBody"></div>
+    <details class="share-box">
+      <summary class="sub">แชร์ Library กับทีม</summary>
+      <div class="actions">
+        <button type="button" id="libExport">คัดลอก Library</button>
+        <button type="button" id="libImport">นำเข้า (รวมกับของเดิม)</button>
+        <span class="copy-ok" id="libOk"></span>
+      </div>
+      <textarea id="libImportBox" rows="3" placeholder="วาง Library ที่ได้รับจากเพื่อนร่วมทีมที่นี่" aria-label="วาง Library"></textarea>
+    </details>
+  </section>
+
   <section class="panel" aria-labelledby="hTopics">
     <details class="settings" id="topicsBox">
       <summary id="hTopics">จัดการหัวข้ออาการและกลุ่มสาเหตุ</summary>
@@ -260,6 +283,7 @@
 <!-- libraries & data -->
 <script src="vendor/jszip.min.js"></script>
 <script src="data/sample-data.js"></script>
+<script src="data/case-guide.js"></script>
 <!-- analysis (no DOM) -->
 <script src="js/core.js"></script>
 <!-- page: order matters, state.js first and main.js last -->
@@ -269,6 +293,7 @@
 <script src="js/app/timeline.js"></script>
 <script src="js/app/promotions.js"></script>
 <script src="js/app/overview.js"></script>
+<script src="js/app/library.js"></script>
 <script src="js/app/main.js"></script>
 </body>
 </html>

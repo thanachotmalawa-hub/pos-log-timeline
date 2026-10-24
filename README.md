@@ -22,8 +22,10 @@ js/app/findings.js      การ์ด "จุดผิดปกติที่
 js/app/timeline.js      Timeline รวม: ตัวกรอง, ช่วงเวลา, แสดงบรรทัด, คัดลอกไป Excel
 js/app/promotions.js    ผลคำนวณโปร: หาบิล/Common/เลขใบเสร็จ, หน้าต่าง XML/JSON, ตารางโปร
 js/app/overview.js      กราฟ "ภาพรวมการเขียน log": ซูม, แถบภาพรวม, ช่วง log หาย
+js/app/library.js       "Library เคส": คู่มือแต่ละหัวข้อ + เคสที่บันทึกไว้ แยกตามกลุ่มสาเหตุ, แชร์กับทีม
 js/app/main.js          เริ่มทำงาน  ← โหลดสุดท้าย
 data/sample-data.js     ข้อมูลตัวอย่างของปุ่ม "โหลดตัวอย่าง" (ลบหรือแทนด้วย [] ได้ถ้าไม่ต้องการ)
+data/case-guide.js      คู่มือหัวข้อ 0–13 ใน Library: อาการ, หลักฐานใน log, สิ่งที่ควรตรวจ / แนบส่ง Dev
 vendor/jszip.min.js     JSZip 3.10.1 (MIT) สำหรับอ่าน .zip โดยไม่ต้องต่อเน็ต
 ```
 
@@ -38,6 +40,7 @@ vendor/jszip.min.js     JSZip 3.10.1 (MIT) สำหรับอ่าน .zip �
 | สี ขนาด ระยะห่าง | `css/style.css` |
 | กฎหาอาการ, หัวข้อ 0–13, ค่าตั้งต้น regex | `js/core.js` |
 | รูปแบบเลขใบเสร็จ / Common ค่าตั้งต้น | `RCPT_DEFAULT` ใน `js/app/state.js` |
+| คำอธิบาย / หลักฐาน / สิ่งที่ต้องตรวจ ของแต่ละหัวข้อใน Library | `data/case-guide.js` |
 | จุดเริ่ม/จบบิลของผลโปร | `BILL_START`, `BILL_END`, `NEW_BILL` ใน `js/app/promotions.js` |
 
 ## เปิดเป็นเว็บด้วย GitHub Pages

@@ -39,224 +39,220 @@
     <span class="status" id="status"></span>
   </div>
 
-  <section class="panel" aria-labelledby="hLanes">
-    <div class="panel-head">
-      <h2 id="hLanes">ภาพรวมการเขียน log</h2>
-      <span class="sub" id="laneRange"></span>
-    </div>
-    <div class="lane-bar">
-      <div class="zoom" role="group" aria-label="ซูมช่วงเวลา">
-        <button type="button" id="lzAll" title="แสดง log ทั้งหมด">ดูทั้งหมด</button>
-        <button type="button" id="lzOut" title="ซูมออก (ช่วงกว้างขึ้น 2 เท่า)" aria-label="ซูมออก">－</button>
-        <button type="button" id="lzIn" title="ซูมเข้า (ช่วงแคบลงครึ่งหนึ่ง)" aria-label="ซูมเข้า">＋</button>
-        <button type="button" id="lzPrev" title="เลื่อนไปช่วงก่อนหน้า" aria-label="เลื่อนไปช่วงก่อนหน้า">◀</button>
-        <button type="button" id="lzNext" title="เลื่อนไปช่วงถัดไป" aria-label="เลื่อนไปช่วงถัดไป">▶</button>
+  <nav class="tabs" role="tablist" aria-label="ส่วนของหน้า" id="tabBar">
+    <button type="button" role="tab" id="tabbtn-main" aria-controls="tab-main" aria-selected="true">ภาพรวม &amp; Timeline</button>
+    <button type="button" role="tab" id="tabbtn-cands" aria-controls="tab-cands" aria-selected="false" tabindex="-1">จุดผิดปกติ <span class="tabn" id="tabnCands"></span></button>
+    <button type="button" role="tab" id="tabbtn-topics" aria-controls="tab-topics" aria-selected="false" tabindex="-1">หัวข้ออาการ</button>
+    <button type="button" role="tab" id="tabbtn-files" aria-controls="tab-files" aria-selected="false" tabindex="-1">ไฟล์ที่โหลด <span class="tabn" id="tabnFiles"></span></button>
+    <button type="button" role="tab" id="tabbtn-settings" aria-controls="tab-settings" aria-selected="false" tabindex="-1">ตั้งค่า</button>
+  </nav>
+
+  <div class="tabpanel" role="tabpanel" id="tab-main" aria-labelledby="tabbtn-main">
+    <section class="panel" aria-labelledby="hLanes">
+      <div class="panel-head">
+        <h2 id="hLanes">ภาพรวมการเขียน log</h2>
+        <span class="sub" id="laneRange"></span>
       </div>
-      <div class="lane-quick" id="laneQuick"></div>
-    </div>
-    <div class="lanes-wrap" id="lanesWrap">
-      <canvas id="lanes" aria-label="กราฟจำนวนบรรทัด log ต่อช่วงเวลาแยกตามชนิด log"></canvas>
-      <div class="lane-tip" id="laneTip" hidden></div>
-    </div>
-    <div class="legend">
-      <span><i style="background:var(--c-DEBUG)"></i>แท่ง = จำนวนบรรทัด log (สูง = เขียนถี่)</span>
-      <span><i style="background:var(--gap-bg);border:1px solid var(--gap)"></i>ช่วงที่ log หลักหาย (กดเพื่อซูมดู)</span>
-      <span><i style="background:var(--ok)"></i>Restart</span>
-      <span><i style="background:var(--err)"></i>มี ERROR / FATAL</span>
-      <span><i style="background:transparent;border:2px solid var(--accent)"></i>ช่วงที่กำลังดู (แถบบนสุด)</span>
-    </div>
-    <div class="sub lane-help">วิธีใช้: <b>คลิก</b> บนกราฟ = เปิด Timeline ที่เวลานั้น · <b>ลากซ้าย–ขวา</b> = ซูมเฉพาะช่วงที่ลาก · <b>คลิกแถบบนสุด</b> = เลื่อนไปดูช่วงนั้น · <b>ดับเบิลคลิก</b> = ดูทั้งหมด</div>
-  </section>
-
-  <section class="panel" aria-labelledby="hTl">
-    <div class="panel-head">
-      <h2 id="hTl">Timeline รวม</h2>
-      <span class="sub" id="tlCount"></span>
-    </div>
-    <div class="filters">
-      <div class="srcbtns" id="srcbtns"></div>
-    </div>
-    <div class="filters">
-      <select id="posSel" aria-label="เครื่อง POS"></select>
-      <input type="text" id="q" placeholder="ค้นหาข้อความ เช่น FinishPayment" aria-label="ค้นหา">
-      <div class="range">
-        <span>ช่วงเวลา</span>
-        <input type="text" id="from" placeholder="07:20:00" aria-label="ตั้งแต่เวลา">
-        <span>ถึง</span>
-        <input type="text" id="to" placeholder="07:30:00" aria-label="ถึงเวลา">
-        <button type="button" id="btnAll">ทั้งหมด</button>
+      <div class="lane-bar">
+        <div class="zoom" role="group" aria-label="ซูมช่วงเวลา">
+          <button type="button" id="lzAll" title="แสดง log ทั้งหมด">ดูทั้งหมด</button>
+          <button type="button" id="lzOut" title="ซูมออก (ช่วงกว้างขึ้น 2 เท่า)" aria-label="ซูมออก">－</button>
+          <button type="button" id="lzIn" title="ซูมเข้า (ช่วงแคบลงครึ่งหนึ่ง)" aria-label="ซูมเข้า">＋</button>
+          <button type="button" id="lzPrev" title="เลื่อนไปช่วงก่อนหน้า" aria-label="เลื่อนไปช่วงก่อนหน้า">◀</button>
+          <button type="button" id="lzNext" title="เลื่อนไปช่วงถัดไป" aria-label="เลื่อนไปช่วงถัดไป">▶</button>
+        </div>
+        <div class="lane-quick" id="laneQuick"></div>
       </div>
-    </div>
-    <div class="filters">
-      <label class="chk"><input type="checkbox" id="fNoise" checked> ซ่อนบรรทัดซ้ำ ๆ</label>
-      <label class="chk"><input type="checkbox" id="fImp"> เฉพาะบรรทัดสำคัญ</label>
-      <label class="chk"><input type="checkbox" id="fDebugLvl"> ซ่อน level DEBUG</label>
-      <label class="chk"><input type="checkbox" id="fErr"> เฉพาะ ERROR / Exception</label>
-      <label class="chk"><input type="checkbox" id="fHl"> เฉพาะบรรทัดที่ไฮไลต์</label>
-      <span class="hlnav"><span class="hlcount" id="hlCount"></span><button type="button" id="hlPrev" aria-label="บรรทัดไฮไลต์ก่อนหน้า">◀ ก่อนหน้า</button><button type="button" id="hlNext" aria-label="บรรทัดไฮไลต์ถัดไป">ถัดไป ▶</button></span>
-    </div>
-    <div class="tl" id="tl" tabindex="0" aria-label="รายการ log เรียงตามเวลา ใช้ลูกศรขึ้นลงเพื่อเลื่อน"><div class="tl-inner" id="tlInner"></div></div>
-    <div class="tl-foot">
-      <span>คลิกบรรทัดเพื่อดูข้อความเต็ม · ตัวหนา = บรรทัดสำคัญ · พื้นส้ม = คำที่ไฮไลต์ · แถบเขียว = restart · แถบแดง = error</span>
-      <span class="actions">
-        <button type="button" id="btnCopyTsv">คัดลอกตารางไปวางใน Excel</button>
-        <span class="copy-ok" id="tsvOk"></span>
-      </span>
-    </div>
-    <div class="detail" id="detail" hidden>
-      <div class="meta" id="detailMeta"></div>
-      <pre id="detailRaw"></pre>
-      <div class="actions"><button type="button" id="btnCopyLine">คัดลอกบรรทัดนี้</button><button type="button" id="btnCtx">ดู ±1 นาที รอบบรรทัดนี้ (ทุก log)</button><span class="copy-ok" id="lineOk"></span></div>
-    </div>
-    <textarea class="fallback" id="fallback" hidden readonly aria-label="ข้อความสำหรับคัดลอก"></textarea>
-  </section>
-
-  <section class="panel" aria-labelledby="hCands">
-    <div class="panel-head">
-      <h2 id="hCands">จุดผิดปกติที่พบ</h2>
-      <span class="sub" id="candsNote"></span>
-    </div>
-    <div class="tally" id="tally"></div>
-    <div class="cands" id="cands"></div>
-  </section>
-
-  <section class="panel" aria-labelledby="hLib">
-    <div class="panel-head">
-      <h2 id="hLib">Library เคส</h2>
-      <span class="sub" id="libNote"></span>
-    </div>
-    <div class="sub">คู่มือแต่ละหัวข้ออาการ แยกตามกลุ่มสาเหตุ พร้อมเคสจริงที่บันทึกไว้ กด "บันทึกเข้า Library" ในการ์ดจุดผิดปกติเพื่อเก็บเคส (จำไว้ในเบราว์เซอร์นี้)</div>
-    <div class="filters">
-      <div class="seg" role="tablist" id="libGroups" aria-label="กลุ่มสาเหตุ"></div>
-      <input type="text" id="libQ" placeholder="ค้นหาหัวข้อ / เครื่อง / หมายเหตุ / ข้อความในสรุป" aria-label="ค้นหาใน Library">
-      <button type="button" id="libOpenAll">เปิด / ปิดทุกหัวข้อ</button>
-    </div>
-    <div class="lib" id="libBody"></div>
-    <details class="share-box">
-      <summary class="sub">แชร์ Library กับทีม</summary>
-      <div class="actions">
-        <button type="button" id="libExport">คัดลอก Library</button>
-        <button type="button" id="libImport">นำเข้า (รวมกับของเดิม)</button>
-        <span class="copy-ok" id="libOk"></span>
+      <div class="lanes-wrap" id="lanesWrap">
+        <canvas id="lanes" aria-label="กราฟจำนวนบรรทัด log ต่อช่วงเวลาแยกตามชนิด log"></canvas>
+        <div class="lane-tip" id="laneTip" hidden></div>
       </div>
-      <textarea id="libImportBox" rows="3" placeholder="วาง Library ที่ได้รับจากเพื่อนร่วมทีมที่นี่" aria-label="วาง Library"></textarea>
-    </details>
-  </section>
+      <div class="legend">
+        <span><i style="background:var(--c-DEBUG)"></i>แท่ง = จำนวนบรรทัด log (สูง = เขียนถี่)</span>
+        <span><i style="background:var(--gap-bg);border:1px solid var(--gap)"></i>ช่วงที่ log หลักหาย (กดเพื่อซูมดู)</span>
+        <span><i style="background:var(--ok)"></i>Restart</span>
+        <span><i style="background:var(--err)"></i>มี ERROR / FATAL</span>
+        <span><i style="background:transparent;border:2px solid var(--accent)"></i>ช่วงที่กำลังดู (แถบบนสุด)</span>
+      </div>
+      <div class="sub lane-help">วิธีใช้: <b>คลิก</b> บนกราฟ = เปิด Timeline ที่เวลานั้น · <b>ลากซ้าย–ขวา</b> = ซูมเฉพาะช่วงที่ลาก · <b>คลิกแถบบนสุด</b> = เลื่อนไปดูช่วงนั้น · <b>ดับเบิลคลิก</b> = ดูทั้งหมด</div>
+    </section>
 
-  <section class="panel" aria-labelledby="hTopics">
-    <details class="settings" id="topicsBox">
-      <summary id="hTopics">จัดการหัวข้ออาการและกลุ่มสาเหตุ</summary>
-      <p class="sub" style="margin:8px 0 0">หัวข้อ 0–13 มีกฎในระบบอยู่แล้ว แก้ชื่อและกลุ่มได้ หัวข้อที่เพิ่มเองจะถูกเลือกเมื่อพบ "คำค้นใน log" ในช่วงก่อนค้าง (ใส่หลายคำคั่นด้วย | ได้) และใส่คำค้นเพิ่มให้หัวข้อเดิมก็ได้</p>
-      <div class="tbl-wrap" style="margin-top:10px">
-        <table class="topic-tbl">
-          <thead><tr><th>#</th><th>ชื่อหัวข้อ</th><th>กลุ่มสาเหตุ</th><th>คำค้นใน log (ไม่บังคับ)</th><th>ค้นใน log</th><th></th></tr></thead>
-          <tbody id="topicRows"></tbody>
+    <section class="panel" aria-labelledby="hTl">
+      <div class="panel-head">
+        <h2 id="hTl">Timeline รวม</h2>
+        <span class="sub" id="tlCount"></span>
+      </div>
+      <div class="filters">
+        <div class="srcbtns" id="srcbtns"></div>
+      </div>
+      <div class="filters">
+        <select id="posSel" aria-label="เครื่อง POS"></select>
+        <input type="text" id="q" placeholder="ค้นหาข้อความ เช่น FinishPayment" aria-label="ค้นหา">
+        <div class="range">
+          <span>ช่วงเวลา</span>
+          <input type="text" id="from" placeholder="07:20:00" aria-label="ตั้งแต่เวลา">
+          <span>ถึง</span>
+          <input type="text" id="to" placeholder="07:30:00" aria-label="ถึงเวลา">
+          <button type="button" id="btnAll">ทั้งหมด</button>
+        </div>
+      </div>
+      <div class="filters">
+        <label class="chk"><input type="checkbox" id="fNoise" checked> ซ่อนบรรทัดซ้ำ ๆ</label>
+        <label class="chk"><input type="checkbox" id="fImp"> เฉพาะบรรทัดสำคัญ</label>
+        <label class="chk"><input type="checkbox" id="fDebugLvl"> ซ่อน level DEBUG</label>
+        <label class="chk"><input type="checkbox" id="fErr"> เฉพาะ ERROR / Exception</label>
+        <label class="chk"><input type="checkbox" id="fHl"> เฉพาะบรรทัดที่ไฮไลต์</label>
+        <span class="hlnav"><span class="hlcount" id="hlCount"></span><button type="button" id="hlPrev" aria-label="บรรทัดไฮไลต์ก่อนหน้า">◀ ก่อนหน้า</button><button type="button" id="hlNext" aria-label="บรรทัดไฮไลต์ถัดไป">ถัดไป ▶</button></span>
+      </div>
+      <div class="tl" id="tl" tabindex="0" aria-label="รายการ log เรียงตามเวลา ใช้ลูกศรขึ้นลงเพื่อเลื่อน"><div class="tl-inner" id="tlInner"></div></div>
+      <div class="tl-foot">
+        <span>คลิกบรรทัดเพื่อดูข้อความเต็ม · ตัวหนา = บรรทัดสำคัญ · พื้นส้ม = คำที่ไฮไลต์ · แถบเขียว = restart · แถบแดง = error</span>
+        <span class="actions">
+          <button type="button" id="btnCopyTsv">คัดลอกตารางไปวางใน Excel</button>
+          <span class="copy-ok" id="tsvOk"></span>
+        </span>
+      </div>
+      <div class="detail" id="detail" hidden>
+        <div class="meta" id="detailMeta"></div>
+        <pre id="detailRaw"></pre>
+        <div class="actions"><button type="button" id="btnCopyLine">คัดลอกบรรทัดนี้</button><button type="button" id="btnCtx">ดู ±1 นาที รอบบรรทัดนี้ (ทุก log)</button><span class="copy-ok" id="lineOk"></span></div>
+      </div>
+      <textarea class="fallback" id="fallback" hidden readonly aria-label="ข้อความสำหรับคัดลอก"></textarea>
+    </section>
+
+    <section class="panel" aria-labelledby="hPromo">
+      <div class="panel-head">
+        <h2 id="hPromo">ผลคำนวณโปรโมชั่น</h2>
+        <span class="sub" id="promoNote"></span>
+      </div>
+      <div class="filters"><label class="chk"><input type="checkbox" id="fPromoEmpty"> แสดงครั้งที่ไม่มีโปร (เช่น AddMmbrCard)</label></div>
+      <div id="promos" class="promos"></div>
+    </section>
+  </div>
+
+  <div class="tabpanel" role="tabpanel" id="tab-cands" aria-labelledby="tabbtn-cands" hidden>
+    <section class="panel" aria-labelledby="hCands">
+      <div class="panel-head">
+        <h2 id="hCands">จุดผิดปกติที่พบ</h2>
+        <span class="sub" id="candsNote"></span>
+      </div>
+      <div class="tally" id="tally"></div>
+      <div class="cands" id="cands"></div>
+    </section>
+  </div>
+
+  <div class="tabpanel" role="tabpanel" id="tab-topics" aria-labelledby="tabbtn-topics" hidden>
+    <section class="panel" aria-labelledby="hTopics">
+      <details class="settings" id="topicsBox" open>
+        <summary id="hTopics">จัดการหัวข้ออาการและกลุ่มสาเหตุ</summary>
+        <p class="sub" style="margin:8px 0 0">หัวข้อ 0–13 มีกฎในระบบอยู่แล้ว แก้ชื่อและกลุ่มได้ หัวข้อที่เพิ่มเองจะถูกเลือกเมื่อพบ "คำค้นใน log" ในช่วงก่อนค้าง (ใส่หลายคำคั่นด้วย | ได้) และใส่คำค้นเพิ่มให้หัวข้อเดิมก็ได้</p>
+        <div class="tbl-wrap" style="margin-top:10px">
+          <table class="topic-tbl">
+            <thead><tr><th>#</th><th>ชื่อหัวข้อ</th><th>กลุ่มสาเหตุ</th><th>คำค้นใน log (ไม่บังคับ)</th><th>ค้นใน log</th><th></th></tr></thead>
+            <tbody id="topicRows"></tbody>
+          </table>
+        </div>
+        <div class="actions" style="margin-top:10px">
+          <button type="button" id="btnAddTopic">+ เพิ่มหัวข้อใหม่</button>
+          <button type="button" class="primary" id="btnSaveTopics">บันทึกหัวข้อ</button>
+          <span class="copy-ok" id="topicOk"></span>
+        </div>
+        <div class="share-box">
+          <div class="sub">ใช้หัวข้อและการตั้งค่าชุดเดียวกันทั้งทีม: คนหนึ่งกด "คัดลอกการตั้งค่า" แล้วส่งให้เพื่อน อีกคนวางในช่องด้านล่างแล้วกด "นำเข้า"</div>
+          <div class="actions">
+            <button type="button" id="btnExport">คัดลอกการตั้งค่า</button>
+            <button type="button" id="btnImport">นำเข้า</button>
+            <span class="copy-ok" id="exportOk"></span>
+          </div>
+          <textarea id="importBox" rows="3" placeholder="วางการตั้งค่าที่ได้รับจากเพื่อนร่วมทีมที่นี่" aria-label="วางการตั้งค่า"></textarea>
+        </div>
+      </details>
+    </section>
+  </div>
+
+  <div class="tabpanel" role="tabpanel" id="tab-files" aria-labelledby="tabbtn-files" hidden>
+    <section class="panel" aria-labelledby="hFiles">
+      <div class="panel-head">
+        <h2 id="hFiles">ไฟล์ที่โหลด</h2>
+        <span class="sub">ชนิด log ตรวจจากเนื้อหาในไฟล์ก่อน ถ้าไม่เจอจึงใช้ชื่อโฟลเดอร์ เปลี่ยนเองได้ในช่อง "ชนิด"</span>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>ไฟล์</th><th>เครื่อง</th><th>ชนิด</th><th>ตรวจจาก</th><th class="num">บรรทัด</th><th>เวลาแรก</th><th>เวลาสุดท้าย</th><th>หมายเหตุ</th></tr></thead>
+          <tbody id="filesBody"></tbody>
         </table>
       </div>
-      <div class="actions" style="margin-top:10px">
-        <button type="button" id="btnAddTopic">+ เพิ่มหัวข้อใหม่</button>
-        <button type="button" class="primary" id="btnSaveTopics">บันทึกหัวข้อ</button>
-        <span class="copy-ok" id="topicOk"></span>
-      </div>
-      <div class="share-box">
-        <div class="sub">ใช้หัวข้อและการตั้งค่าชุดเดียวกันทั้งทีม: คนหนึ่งกด "คัดลอกการตั้งค่า" แล้วส่งให้เพื่อน อีกคนวางในช่องด้านล่างแล้วกด "นำเข้า"</div>
-        <div class="actions">
-          <button type="button" id="btnExport">คัดลอกการตั้งค่า</button>
-          <button type="button" id="btnImport">นำเข้า</button>
-          <span class="copy-ok" id="exportOk"></span>
+    </section>
+  </div>
+
+  <div class="tabpanel" role="tabpanel" id="tab-settings" aria-labelledby="tabbtn-settings" hidden>
+    <section class="panel">
+      <details class="settings" id="settingsBox" open>
+        <summary>ตั้งค่าการวิเคราะห์</summary>
+        <div class="set-grid">
+          <label>ถือว่า log หาย เมื่อเงียบเกิน (นาที)
+            <input type="number" id="sGap" min="1" max="240" step="1">
+            <span class="hint">ITP เขียน cmsTimer ทุก 5 นาที จึงควรตั้งมากกว่า 5</span>
+          </label>
+          <label>ช่วงย้อนดูก่อนค้าง (นาที)
+            <input type="number" id="sCtx" min="1" max="60" step="1">
+            <span class="hint">ใช้หาสถานะล่าสุด งานค้าง และปุ่ม "ดูช่วงก่อนค้าง"</span>
+          </label>
+          <label>log หลักที่ใช้ตัดสินว่าเครื่องค้าง
+            <input type="text" id="sKey">
+            <span class="hint">คั่นด้วยจุลภาค: ACT, ITP, DEBUG, MSG, COU, EDC, CMS</span>
+          </label>
+          <label>จุด restart (ชนิด :: regex :: ชื่อที่แสดง)
+            <textarea id="sRst" rows="4"></textarea>
+          </label>
+          <label>Heartbeat / Timer (ชนิด :: regex :: ชื่อที่แสดง)
+            <textarea id="sHb" rows="3"></textarea>
+            <span class="hint">ระบบหาความถี่ปกติเอง ถ้า Timer ขาดหายจะใช้ประมาณเวลาค้างจริง</span>
+          </label>
+          <label>บรรทัดซ้ำ ๆ ที่ซ่อนได้ (regex)
+            <textarea id="sNoise" rows="3"></textarea>
+          </label>
+          <label>คำที่ต้องไฮไลต์ (regex ไม่สนตัวพิมพ์เล็กใหญ่)
+            <textarea id="sHl" rows="3"></textarea>
+            <span class="hint">เช่น error, exception, fail, ไม่สำเร็จ, ติดต่อ Helpdesk เพิ่มคำได้โดยคั่นด้วย |</span>
+          </label>
+          <label>ยกเว้นไม่ไฮไลต์ (regex)
+            <textarea id="sHlx" rows="3"></textarea>
+            <span class="hint">บรรทัดที่เจอบ่อยแต่ไม่ใช่ปัญหา เช่น ชื่อ method ที่มีคำว่า Exception</span>
+          </label>
+          <label>บรรทัดสำคัญ (regex)
+            <textarea id="sImp" rows="3"></textarea>
+          </label>
+          <label>ชื่อหน้าจอ ITP (ชื่อฟอร์ม = คำอธิบาย)
+            <textarea id="sForms" rows="8"></textarea>
+            <span class="hint">ใช้แปลชื่อฟอร์มใน ITP เป็นชื่อหน้าจอ เพิ่มฟอร์มใหม่ได้ทีละบรรทัด</span>
+          </label>
+          <label>ชื่อปุ่ม ITP (ชื่อปุ่ม = คำอธิบาย)
+            <textarea id="sBtns" rows="8"></textarea>
+            <span class="hint">ปุ่มที่ไม่มีในรายการ ระบบเดาจากชื่อ เช่น btnSignOff_Click → ปุ่ม Sign Off</span>
+          </label>
+          <label>ข้อความ Popup ตามรหัส (Message Code = ข้อความ)
+            <textarea id="sCodes" rows="6"></textarea>
+            <span class="hint">ใช้แทนข้อความที่ภาษาไทยเสีย เว็บเพิ่มรหัสใหม่ให้เองเมื่อเปิดไฟล์ที่ภาษาไทยอ่านได้ หรือพิมพ์เพิ่มเองจากที่เห็นบนจอ POS</span>
+          </label>
+          <label>ชื่องานของ POS (ชื่อ function = คำอธิบาย)
+            <textarea id="sFuncs" rows="8"></textarea>
+            <span class="hint">ใช้กับ Send Function ใน ITP และ State ใน Activity</span>
+          </label>
+          <label>เลขใบเสร็จ / Common (ชื่อที่แสดง :: regex)
+            <textarea id="sRcpt" rows="4"></textarea>
+            <span class="hint">ใช้หาเลขบิลของผลคำนวณโปร ค้นใน log ทุกตัวของเครื่องเดียวกันตั้งแต่เริ่มบิลจนพิมพ์ใบเสร็จ ใช้ค่าในวงเล็บ ( ) ตัวแรก ไม่สนตัวพิมพ์เล็กใหญ่</span>
+          </label>
         </div>
-        <textarea id="importBox" rows="3" placeholder="วางการตั้งค่าที่ได้รับจากเพื่อนร่วมทีมที่นี่" aria-label="วางการตั้งค่า"></textarea>
-      </div>
-    </details>
-  </section>
+        <div class="actions" style="margin-top:12px">
+          <button type="button" class="primary" id="btnApply">ใช้การตั้งค่า</button>
+          <button type="button" id="btnReset">คืนค่าเริ่มต้น</button>
+          <span class="sub">การตั้งค่าจำไว้ในเบราว์เซอร์นี้</span>
+        </div>
+      </details>
+    </section>
+  </div>
 
-  <section class="panel" aria-labelledby="hPromo">
-    <div class="panel-head">
-      <h2 id="hPromo">ผลคำนวณโปรโมชั่น</h2>
-      <span class="sub" id="promoNote"></span>
-    </div>
-    <div class="filters"><label class="chk"><input type="checkbox" id="fPromoEmpty"> แสดงครั้งที่ไม่มีโปร (เช่น AddMmbrCard)</label></div>
-    <div id="promos" class="promos"></div>
-  </section>
-
-  <section class="panel" aria-labelledby="hFiles">
-    <div class="panel-head">
-      <h2 id="hFiles">ไฟล์ที่โหลด</h2>
-      <span class="sub">ชนิด log ตรวจจากเนื้อหาในไฟล์ก่อน ถ้าไม่เจอจึงใช้ชื่อโฟลเดอร์ เปลี่ยนเองได้ในช่อง "ชนิด"</span>
-    </div>
-    <div class="tbl-wrap">
-      <table>
-        <thead><tr><th>ไฟล์</th><th>เครื่อง</th><th>ชนิด</th><th>ตรวจจาก</th><th class="num">บรรทัด</th><th>เวลาแรก</th><th>เวลาสุดท้าย</th><th>หมายเหตุ</th></tr></thead>
-        <tbody id="filesBody"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <section class="panel">
-    <details class="settings" id="settingsBox">
-      <summary>ตั้งค่าการวิเคราะห์</summary>
-      <div class="set-grid">
-        <label>ถือว่า log หาย เมื่อเงียบเกิน (นาที)
-          <input type="number" id="sGap" min="1" max="240" step="1">
-          <span class="hint">ITP เขียน cmsTimer ทุก 5 นาที จึงควรตั้งมากกว่า 5</span>
-        </label>
-        <label>ช่วงย้อนดูก่อนค้าง (นาที)
-          <input type="number" id="sCtx" min="1" max="60" step="1">
-          <span class="hint">ใช้หาสถานะล่าสุด งานค้าง และปุ่ม "ดูช่วงก่อนค้าง"</span>
-        </label>
-        <label>log หลักที่ใช้ตัดสินว่าเครื่องค้าง
-          <input type="text" id="sKey">
-          <span class="hint">คั่นด้วยจุลภาค: ACT, ITP, DEBUG, MSG, COU, EDC, CMS</span>
-        </label>
-        <label>จุด restart (ชนิด :: regex :: ชื่อที่แสดง)
-          <textarea id="sRst" rows="4"></textarea>
-        </label>
-        <label>Heartbeat / Timer (ชนิด :: regex :: ชื่อที่แสดง)
-          <textarea id="sHb" rows="3"></textarea>
-          <span class="hint">ระบบหาความถี่ปกติเอง ถ้า Timer ขาดหายจะใช้ประมาณเวลาค้างจริง</span>
-        </label>
-        <label>บรรทัดซ้ำ ๆ ที่ซ่อนได้ (regex)
-          <textarea id="sNoise" rows="3"></textarea>
-        </label>
-        <label>คำที่ต้องไฮไลต์ (regex ไม่สนตัวพิมพ์เล็กใหญ่)
-          <textarea id="sHl" rows="3"></textarea>
-          <span class="hint">เช่น error, exception, fail, ไม่สำเร็จ, ติดต่อ Helpdesk เพิ่มคำได้โดยคั่นด้วย |</span>
-        </label>
-        <label>ยกเว้นไม่ไฮไลต์ (regex)
-          <textarea id="sHlx" rows="3"></textarea>
-          <span class="hint">บรรทัดที่เจอบ่อยแต่ไม่ใช่ปัญหา เช่น ชื่อ method ที่มีคำว่า Exception</span>
-        </label>
-        <label>บรรทัดสำคัญ (regex)
-          <textarea id="sImp" rows="3"></textarea>
-        </label>
-        <label>ชื่อหน้าจอ ITP (ชื่อฟอร์ม = คำอธิบาย)
-          <textarea id="sForms" rows="8"></textarea>
-          <span class="hint">ใช้แปลชื่อฟอร์มใน ITP เป็นชื่อหน้าจอ เพิ่มฟอร์มใหม่ได้ทีละบรรทัด</span>
-        </label>
-        <label>ชื่อปุ่ม ITP (ชื่อปุ่ม = คำอธิบาย)
-          <textarea id="sBtns" rows="8"></textarea>
-          <span class="hint">ปุ่มที่ไม่มีในรายการ ระบบเดาจากชื่อ เช่น btnSignOff_Click → ปุ่ม Sign Off</span>
-        </label>
-        <label>ข้อความ Popup ตามรหัส (Message Code = ข้อความ)
-          <textarea id="sCodes" rows="6"></textarea>
-          <span class="hint">ใช้แทนข้อความที่ภาษาไทยเสีย เว็บเพิ่มรหัสใหม่ให้เองเมื่อเปิดไฟล์ที่ภาษาไทยอ่านได้ หรือพิมพ์เพิ่มเองจากที่เห็นบนจอ POS</span>
-        </label>
-        <label>ชื่องานของ POS (ชื่อ function = คำอธิบาย)
-          <textarea id="sFuncs" rows="8"></textarea>
-          <span class="hint">ใช้กับ Send Function ใน ITP และ State ใน Activity</span>
-        </label>
-        <label>เลขใบเสร็จ / Common (ชื่อที่แสดง :: regex)
-          <textarea id="sRcpt" rows="4"></textarea>
-          <span class="hint">ใช้หาเลขบิลของผลคำนวณโปร ค้นใน log ทุกตัวของเครื่องเดียวกันตั้งแต่เริ่มบิลจนพิมพ์ใบเสร็จ ใช้ค่าในวงเล็บ ( ) ตัวแรก ไม่สนตัวพิมพ์เล็กใหญ่</span>
-        </label>
-      </div>
-      <div class="actions" style="margin-top:12px">
-        <button type="button" class="primary" id="btnApply">ใช้การตั้งค่า</button>
-        <button type="button" id="btnReset">คืนค่าเริ่มต้น</button>
-        <span class="sub">การตั้งค่าจำไว้ในเบราว์เซอร์นี้</span>
-      </div>
-    </details>
-  </section>
 </div>
 <div class="drop-overlay" id="dropOverlay" hidden>วางโฟลเดอร์ ไฟล์ log หรือ .zip ที่นี่</div>
 <dialog id="xmlDlg" aria-labelledby="xmlDlgTitle">
@@ -283,7 +279,6 @@
 <!-- libraries & data -->
 <script src="vendor/jszip.min.js"></script>
 <script src="data/sample-data.js"></script>
-<script src="data/case-guide.js"></script>
 <!-- analysis (no DOM) -->
 <script src="js/core.js"></script>
 <!-- page: order matters, state.js first and main.js last -->
@@ -293,7 +288,7 @@
 <script src="js/app/timeline.js"></script>
 <script src="js/app/promotions.js"></script>
 <script src="js/app/overview.js"></script>
-<script src="js/app/library.js"></script>
+<script src="js/app/tabs.js"></script>
 <script src="js/app/main.js"></script>
 </body>
 </html>

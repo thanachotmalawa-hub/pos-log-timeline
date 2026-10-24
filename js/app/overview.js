@@ -22,7 +22,7 @@ function renderLaneQuick() {
     var on = st.from != null && st.from <= c.start && (st.to == null || st.to >= c.start);
     var txt = (k + 1) + ' · ' + tLabel(c.start) + (c.kind === 'event' ? ' แจ้งเตือน' : ' log หาย' + (c.end ? ' ' + Core.fmtDur(c.end - c.start) : ''));
     return '<button type="button" class="qchip' + (c.kind === 'event' ? ' ev' : '') + (on ? ' on' : '') + '" data-qc="' + st.cands.indexOf(c) + '" title="ซูมไปดูช่วงนี้และเปิด Timeline ที่เวลานี้">' + esc(txt) + '</button>';
-  }).join('') + (cs.length > shown.length ? '<span class="lbl">และอีก ' + (cs.length - shown.length) + ' จุด (ดูในส่วนจุดผิดปกติที่พบ)</span>' : '');
+  }).join('') + (cs.length > shown.length ? '<button type="button" class="qchip more" data-goto-tab="cands">ดูทั้งหมด ' + cs.length + ' จุด →</button>' : '');
   Array.prototype.forEach.call(box.querySelectorAll('[data-qc]'), function (b) { b.onclick = function () { focusCand(st.cands[+b.dataset.qc]); }; });
 }
 function drawLanes() {

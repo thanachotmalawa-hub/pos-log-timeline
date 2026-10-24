@@ -144,33 +144,6 @@ table.ptbl tr.tot td { border-top: 2px solid var(--line); font-weight: 600; }
 .tally .n { text-align: right; font-family: var(--f-mono); }
 .empty { color: var(--muted); font-size: 13px; padding: 8px 0; }
 
-/* case library */
-.seg .n { font-family: var(--f-mono); font-size: 11px; opacity: 0.8; }
-#libGroups { flex-wrap: wrap; max-width: 100%; }
-#libQ { flex: 1 1 18em; min-width: 0; }
-.lib { display: grid; gap: 14px; }
-.lib-group { display: grid; gap: 6px; }
-.lib-gh { margin: 0; font-size: 14px; font-weight: 600; padding-left: 10px; border-left: 4px solid var(--line); }
-.lib-gh.g-HW { border-left-color: var(--c-EDC); } .lib-gh.g-SW { border-left-color: var(--c-ACT); } .lib-gh.g-ENV { border-left-color: var(--c-CMS); }
-details.lib-topic { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); min-width: 0; }
-details.lib-topic > summary { cursor: pointer; padding: 8px 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
-details.lib-topic[open] > summary { border-bottom: 1px solid var(--line); }
-.lib-tname { font-weight: 600; flex: 1 1 16em; min-width: 0; }
-.lib-in { padding: 10px 12px; display: grid; gap: 10px; min-width: 0; }
-.lib-in p { margin: 0; }
-.lib-desc { font-size: 14px; }
-.lib-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px 16px; }
-.lib-cols ul { margin: 2px 0 0; padding-left: 1.2em; font-size: 13px; }
-.lib-note { display: grid; gap: 4px; }
-.lib-note textarea { font-family: var(--f-ui); font-size: 13px; }
-.lib-cases { display: grid; gap: 8px; }
-.lib-case { border: 1px solid var(--line); border-left: 4px solid var(--gap); background: var(--sunken); border-radius: 8px; padding: 8px 10px; display: grid; gap: 6px; min-width: 0; }
-.lib-case input[type=text] { width: 100%; }
-.lib-sum { margin: 6px 0 0; font-family: var(--f-mono); font-size: 12px; white-space: pre-wrap; overflow-wrap: anywhere; max-height: 280px; overflow: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 8px; }
-.lib-move { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
-.lib-move select { max-width: min(28em, 60vw); }
-details.share-box > summary { cursor: pointer; }
-
 /* source chip */
 .chip { display: inline-flex; align-items: center; gap: 5px; font-family: var(--f-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: var(--sc, var(--muted)); }
 .chip::before { content: ""; width: 8px; height: 8px; border-radius: 2px; background: var(--sc, var(--muted)); flex: none; }
@@ -262,6 +235,16 @@ details.settings > summary { cursor: pointer; font-weight: 600; font-size: 15px;
 .set-grid .hint { font-size: 12px; color: var(--muted); }
 .copy-ok { color: var(--ok); font-size: 12px; }
 textarea.fallback { height: 160px; }
+
+/* tabs */
+.tabs { position: sticky; top: 0; z-index: 20; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: thin; background: var(--bg); border-bottom: 1px solid var(--line); padding-top: 6px; margin-bottom: -4px; }
+.tabs button[role=tab] { border: 1px solid transparent; border-bottom: 0; border-radius: 8px 8px 0 0; background: transparent; color: var(--muted); padding: 9px 16px; font-size: 14px; font-weight: 500; flex: none; position: relative; top: 1px; }
+.tabs button[role=tab]:hover { color: var(--ink); border-color: transparent; background: var(--sunken); }
+.tabs button[role=tab][aria-selected=true] { background: var(--surface); color: var(--ink); font-weight: 600; border-color: var(--line); box-shadow: inset 0 3px 0 var(--accent); }
+.tabn { font-family: var(--f-mono); font-size: 11px; font-weight: 600; background: var(--gap-bg); color: var(--gap); border-radius: 999px; padding: 0 7px; }
+.tabn:empty { display: none; }
+.tabpanel { display: grid; gap: 16px; min-width: 0; }
+.qchip.more { background: var(--sunken); color: var(--accent); }
 .bill { display: inline-flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; }
 .pill.rc { background: var(--sel); color: var(--ink); border-color: transparent; font-family: var(--f-mono); font-weight: 600; }
 .promo-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; }

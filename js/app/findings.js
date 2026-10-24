@@ -58,7 +58,7 @@ function renderCands() {
   var box = $('cands');
   $('candsNote').textContent = 'log หลัก ' + S.keySrc + ' · ถือว่า log หายเมื่อเงียบเกิน ' + S.gapMin + ' นาที';
   st.cands.forEach(function (c) { var o = overrides[ovKey(c)]; c.topicFinal = o != null ? o : c.topic.id; });
-  renderTally(); renderLibrary();
+  renderTally();
   if (!st.files.length) { box.innerHTML = '<div class="empty-state"><b>ยังไม่มีไฟล์ log</b><span>กด "เลือกโฟลเดอร์ log" หรือลากโฟลเดอร์ / ไฟล์ .zip มาวางที่ไหนก็ได้ในหน้านี้ หรือกด "โหลดตัวอย่าง" เพื่อดูเคสตัวอย่าง</span></div>'; return; }
   if (!st.cands.length) { box.innerHTML = '<div class="empty">ไม่พบจุดผิดปกติ (ไม่มีข้อความแจ้งเตือน และไม่มีช่วงที่ log หลักเงียบเกิน ' + S.gapMin + ' นาที) ลองลดค่าในตั้งค่า หรือตรวจว่าโหลด log ITP / Activity ครบหรือไม่</div>'; return; }
   var firstOpen = -1;
@@ -98,18 +98,16 @@ function renderCands() {
       '<div><div class="sub" style="margin-bottom:6px">ไล่ log ตามลำดับ ' + S.ctxMin + ' นาทีก่อนค้าง</div><ol class="steps">' + steps + '</ol></div>' +
       (jr.length ? '<details class="journey"' + (k === firstOpen ? ' open' : '') + '><summary>ลำดับการใช้งานก่อนค้าง (' + jr.length + ' เหตุการณ์ หน้าจอ · ปุ่ม · งาน · Popup · EDC · error)</summary><div class="jlist mono">' + journey + '</div></details>' : '') +
       '<details class="lastwrap"><summary>บรรทัดสุดท้ายของแต่ละ log ก่อนหยุด</summary><div class="lastlog mono" style="margin-top:6px">' + last + '</div></details>' +
-      '<div class="cand-actions"><button type="button" class="primary" data-act="focus" data-k="' + k + '">ดูช่วงก่อนค้าง ' + S.ctxMin + ' นาที</button><button type="button" data-act="copy" data-k="' + k + '">คัดลอกสรุปส่ง Dev</button><button type="button" data-act="lib" data-k="' + k + '">บันทึกเข้า Library</button><span class="copy-ok" id="ok' + k + '"></span></div>' +
+      '<div class="cand-actions"><button type="button" class="primary" data-act="focus" data-k="' + k + '">ดูช่วงก่อนค้าง ' + S.ctxMin + ' นาที</button><button type="button" data-act="copy" data-k="' + k + '">คัดลอกสรุปส่ง Dev</button><span class="copy-ok" id="ok' + k + '"></span></div>' +
       '</article>';
   }).join('');
   Array.prototype.forEach.call(box.querySelectorAll('button[data-act]'), function (b) {
     b.onclick = function () {
       var c = st.cands[+b.dataset.k];
       if (b.dataset.act === 'focus') { focusCand(c); $('tl').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-      else if (b.dataset.act === 'lib') { var ok = libSaveCase(c); markLibButtons(); $('ok' + b.dataset.k).textContent = ok ? 'บันทึกเข้า Library แล้ว' : 'พื้นที่เก็บในเบราว์เซอร์เต็ม บันทึกไม่ได้'; }
       else copyText(Core.summaryText(c, st.all, st.files, topics()), $('ok' + b.dataset.k));
     };
   });
-  markLibButtons();
   Array.prototype.forEach.call(box.querySelectorAll('select[data-topic]'), function (sel) {
     sel.onchange = function () {
       var c = st.cands[+sel.dataset.topic], v = +sel.value;

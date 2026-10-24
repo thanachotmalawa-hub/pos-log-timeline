@@ -185,10 +185,7 @@
           <legend>3. ตัวเลือก</legend>
           <label class="chk"><input type="checkbox" id="pullDry" checked> ทดสอบ (DryRun) แสดงรายการไฟล์ ไม่ copy</label>
           <label class="chk"><input type="checkbox" id="pullStartup" checked> แนบ log startup ของวันที่เลือกเสมอ</label>
-          <span class="hint">log startup (logstartup, StartUpLog, DebugStartupLog) มักเขียนตอนเปิดเครื่องตอนเช้า จึงอาจไม่อยู่ในช่วงเวลาที่เลือก</span>
-          <label class="ip-row">IP เครื่องสาขา (ไม่บังคับ)<input type="text" id="pullIp" placeholder="เช่น 111.152.169.111" inputmode="decimal" autocomplete="off"></label>
-          <span class="hint">ใช้สร้าง path สำหรับเปิดโฟลเดอร์ เว็บไม่ได้เชื่อมต่อไปที่เครื่องนี้</span>
-        </fieldset>
+          <span class="hint">log startup (logstartup, StartUpLog, DebugStartupLog) มักเขียนตอนเปิดเครื่องตอนเช้า จึงอาจไม่อยู่ในช่วงเวลาที่เลือก</span>        </fieldset>
         </div>
       </div>
 
@@ -204,7 +201,7 @@
 
       <div class="pull-after">
         <h3>หลังรันเสร็จ</h3>
-        <div class="after-row"><span>เปิดโฟลเดอร์:</span><code id="pullUnc">\\&lt;IP&gt;\C$\pull_log</code><button type="button" id="pullUncCopy">คัดลอก</button></div>
+        <div class="after-row"><span>เปิดโฟลเดอร์:</span><code>\\&lt;IP เครื่องสาขา&gt;\C$\pull_log</code></div>
         <div class="after-row"><span>ดูไฟล์ที่ดึงมา:</span><code id="pullDirSql">EXEC master..xp_cmdshell 'dir C:\pull_log /s';</code><button type="button" id="pullDirCopy">คัดลอก</button></div>
         <div class="after-row"><span>ลบเมื่อใช้เสร็จ:</span><label class="del-name">ชื่อโฟลเดอร์ <input type="text" id="pullDelName" placeholder="POS1_115269_20261024_224411" autocomplete="off"></label><code id="pullDelSql"></code><button type="button" id="pullDelCopy">คัดลอก</button></div>
         <span class="hint">ใส่ชื่อโฟลเดอร์ที่ได้จากบรรทัด TO ตอนรันจริง คำสั่งจะลบเฉพาะโฟลเดอร์นั้นใน C:\pull_log</span>

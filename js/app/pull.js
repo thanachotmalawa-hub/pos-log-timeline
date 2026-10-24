@@ -100,17 +100,17 @@ function sqlDT(d) { return isoDate(d) + ' ' + hhmm(d) + ':00'; }
 
 /* ---------- state ---------- */
 var pullState = (function () {
-  var s = { rooms: PULL_ROOMS.map(function (r) { return r.id; }), startup: true, ip: '' };
-  try { var j = JSON.parse(localStorage.getItem(PULL_KEY) || 'null'); if (j) { if (Array.isArray(j.rooms)) s.rooms = j.rooms; if (j.startup != null) s.startup = !!j.startup; if (j.ip) s.ip = String(j.ip); } } catch (e) {}
+  var s = { rooms: PULL_ROOMS.map(function (r) { return r.id; }), startup: true };
+  try { var j = JSON.parse(localStorage.getItem(PULL_KEY) || 'null'); if (j) { if (Array.isArray(j.rooms)) s.rooms = j.rooms; if (j.startup != null) s.startup = !!j.startup; } } catch (e) {}
   return s;
 })();
-function savePull() { try { localStorage.setItem(PULL_KEY, JSON.stringify({ rooms: pullState.rooms, startup: pullState.startup, ip: pullState.ip })); } catch (e) {} }
+function savePull() { try { localStorage.setItem(PULL_KEY, JSON.stringify({ rooms: pullState.rooms, startup: pullState.startup })); } catch (e) {} }
 
 function renderPullRooms() {
   $('pullRooms').innerHTML = PULL_ROOMS.map(function (r, i) {
     var on = pullState.rooms.indexOf(r.id) >= 0;
     return '<label class="room' + (on ? ' on' : '') + '"><input type="checkbox" data-room="' + r.id + '"' + (on ? ' checked' : '') + '>' +
-      '<span class="room-no">' + (i + 1) + '</span><span class="room-txt"><b>' + r.id + '</b><code>C:\\Store\\' + esc(r.path) + '</code><span class="sub">' + esc(r.ex) + '</span></span></label>';
+      '<span class="room-no">' + (i + 1) + '</span><span class="room-txt"><b>' + r.id + '</b><code>C:\\Store\\' + esc(r.path) + '</code><span class="sub">ตัวอย่างไฟล์: ' + esc(r.ex) + '</span></span></label>';
   }).join('');
   Array.prototype.forEach.call($('pullRooms').querySelectorAll('[data-room]'), function (cb) {
     cb.onchange = function () {
@@ -146,10 +146,7 @@ function updatePull() {
     from: sqlDT(f), to: sqlDT(t), rooms: pullState.rooms, dry: dry, startup: pullState.startup,
     made: new Date().toISOString().slice(0, 16).replace('T', ' ')
   });
-  // after-run helpers
-  var ip = $('pullIp').value.trim(); pullState.ip = ip; savePull();
-  var okHost = /^[A-Za-z0-9.\-]+$/.test(ip);
-  $('pullUnc').textContent = '\\\\' + (okHost ? ip : '<IP>') + '\\C$\\pull_log';
+  // after-run helper: delete only the folder that was named
   var name = $('pullDelName').value.trim(), okName = /^[A-Za-z0-9_.\-]+$/.test(name) && !/^\.+$/.test(name);
   $('pullDelSql').textContent = okName ? "EXEC master..xp_cmdshell 'rmdir /s /q \"C:\\pull_log\\" + name + "\"';" : '(ใส่ชื่อโฟลเดอร์ก่อน)';
   $('pullDelCopy').disabled = !okName;
@@ -166,12 +163,11 @@ function quickRange(kind) {
 (function initPull() {
   renderPullRooms();
   $('pullStartup').checked = pullState.startup;
-  $('pullIp').value = pullState.ip;
   quickRange('last1');
   $('pullAll').onclick = function () { pullState.rooms = PULL_ROOMS.map(function (r) { return r.id; }); savePull(); renderPullRooms(); updatePull(); };
   $('pullNone').onclick = function () { pullState.rooms = []; savePull(); renderPullRooms(); updatePull(); };
   ['pullFromD', 'pullFromT', 'pullToD', 'pullToT', 'pullDry', 'pullStartup'].forEach(function (id) { $(id).onchange = updatePull; $(id).oninput = updatePull; });
-  $('pullIp').oninput = updatePull; $('pullDelName').oninput = updatePull;
+  $('pullDelName').oninput = updatePull;
   Array.prototype.forEach.call(document.querySelectorAll('[data-qr]'), function (b) { b.onclick = function () { quickRange(b.dataset.qr); }; });
   $('pullIncGo').onclick = function () {
     var tv = $('pullIncT').value; if (!/^\d{2}:\d{2}/.test(tv)) { $('pullIncT').focus(); return; }
@@ -180,7 +176,6 @@ function quickRange(kind) {
     setDT('pullFromD', 'pullFromT', new Date(c - w * 60000)); setDT('pullToD', 'pullToT', new Date(+c + w * 60000)); updatePull();
   };
   $('pullCopy').onclick = function () { copyText($('pullSql').value, $('pullOk')); };
-  $('pullUncCopy').onclick = function () { copyText($('pullUnc').textContent, $('pullOk')); };
   $('pullDirCopy').onclick = function () { copyText($('pullDirSql').textContent, $('pullOk')); };
   $('pullDelCopy').onclick = function () { copyText($('pullDelSql').textContent, $('pullOk')); };
 })();

@@ -221,6 +221,8 @@ var Core = (function () {
   function posFromPath(path) {
     var segs = path.split('/');
     for (var i = 0; i < segs.length - 1; i++) if (/\d+[_\- ]?POS\d+/i.test(segs[i])) return segs[i];
+    // folders made by the "ดึง log" script: <COMPUTERNAME>_<yyyyMMdd_HHmmss> → the machine name, so several pulls merge
+    for (var j = 0; j < segs.length - 1; j++) { var pm = /^(.+)_\d{8}_\d{6}$/.exec(segs[j]); if (pm) return pm[1]; }
     if (segs.length >= 3) return segs[segs.length - 3];
     if (segs.length === 2) return segs[0];
     return '-';

@@ -41,6 +41,7 @@
 
   <nav class="tabs" role="tablist" aria-label="ส่วนของหน้า" id="tabBar">
     <button type="button" role="tab" id="tabbtn-main" aria-controls="tab-main" aria-selected="true">ภาพรวม &amp; Timeline</button>
+    <button type="button" role="tab" id="tabbtn-pull" aria-controls="tab-pull" aria-selected="false" tabindex="-1">ดึง log</button>
     <button type="button" role="tab" id="tabbtn-cands" aria-controls="tab-cands" aria-selected="false" tabindex="-1">จุดผิดปกติ <span class="tabn" id="tabnCands"></span></button>
     <button type="button" role="tab" id="tabbtn-topics" aria-controls="tab-topics" aria-selected="false" tabindex="-1">หัวข้ออาการ</button>
     <button type="button" role="tab" id="tabbtn-files" aria-controls="tab-files" aria-selected="false" tabindex="-1">ไฟล์ที่โหลด <span class="tabn" id="tabnFiles"></span></button>
@@ -127,6 +128,87 @@
       </div>
       <div class="filters"><label class="chk"><input type="checkbox" id="fPromoEmpty"> แสดงครั้งที่ไม่มีโปร (เช่น AddMmbrCard)</label></div>
       <div id="promos" class="promos"></div>
+    </section>
+  </div>
+
+  <div class="tabpanel" role="tabpanel" id="tab-pull" aria-labelledby="tabbtn-pull" hidden>
+    <section class="panel" aria-labelledby="hPull">
+      <div class="panel-head">
+        <h2 id="hPull">ดึง log จากเครื่องสาขาผ่าน SQL</h2>
+        <span class="sub">เลือกห้องและช่วงเวลา → คัดลอก SQL ไปรันใน SSMS → เปิดโฟลเดอร์ที่ได้ในเว็บนี้</span>
+      </div>
+      <ol class="pull-steps">
+        <li><b>เลือกห้อง log</b> และ<b>ช่วงเวลา</b>ด้านล่าง</li>
+        <li>กด <b>คัดลอก SQL</b> แล้ววางใน SSMS ที่ต่อเครื่องสาขาไว้ กด Execute (รันแบบ<b>ทดสอบ</b>ก่อน: แสดงรายการไฟล์ ไม่ copy)</li>
+        <li>รายการถูกต้อง → ติ๊ก "ทดสอบ" ออก คัดลอก SQL ใหม่แล้วรันอีกครั้ง ไฟล์จะไปอยู่ที่ <code>C:\pull_log\&lt;ชื่อเครื่อง&gt;_&lt;วันเวลา&gt;\</code> ของเครื่องสาขา</li>
+        <li>เปิดโฟลเดอร์นั้นผ่าน <code>\\IP\C$\pull_log</code> แล้วลากเข้าเว็บ (แท็บแรก) จากนั้นลบโฟลเดอร์บนเครื่องสาขา</li>
+      </ol>
+
+      <div class="pull-grid">
+        <fieldset class="pull-box">
+          <legend>1. ห้อง log</legend>
+          <div class="actions">
+            <button type="button" id="pullAll">เลือกทั้งหมด</button>
+            <button type="button" id="pullNone">ไม่เลือก</button>
+            <span class="sub" id="pullRoomCount"></span>
+          </div>
+          <div class="room-list" id="pullRooms"></div>
+        </fieldset>
+
+        <div class="pull-col">
+        <fieldset class="pull-box">
+          <legend>2. ช่วงเวลา (เวลาของเครื่องสาขา)</legend>
+          <div class="dt-grid">
+            <label>ตั้งแต่วันที่<input type="date" id="pullFromD"></label>
+            <label>เวลา<input type="time" id="pullFromT" step="60"></label>
+            <label>ถึงวันที่<input type="date" id="pullToD"></label>
+            <label>เวลา<input type="time" id="pullToT" step="60"></label>
+          </div>
+          <div class="actions quick-range">
+            <span class="sub">ช่วงด่วน:</span>
+            <button type="button" data-qr="today">วันนี้ทั้งวัน</button>
+            <button type="button" data-qr="yesterday">เมื่อวานทั้งวัน</button>
+            <button type="button" data-qr="last1">1 ชม. ล่าสุด</button>
+            <button type="button" data-qr="last3">3 ชม. ล่าสุด</button>
+          </div>
+          <div class="incident">
+            <label>หรือ เวลาเกิดเหตุ<input type="time" id="pullIncT" step="60"></label>
+            <label>ก่อน–หลัง
+              <select id="pullIncW"><option value="15">±15 นาที</option><option value="30" selected>±30 นาที</option><option value="60">±1 ชั่วโมง</option><option value="120">±2 ชั่วโมง</option></select>
+            </label>
+            <button type="button" id="pullIncGo">ใช้ช่วงนี้</button>
+          </div>
+          <div class="range-say" id="pullSay"></div>
+        </fieldset>
+
+        <fieldset class="pull-box">
+          <legend>3. ตัวเลือก</legend>
+          <label class="chk"><input type="checkbox" id="pullDry" checked> ทดสอบ (DryRun) แสดงรายการไฟล์ ไม่ copy</label>
+          <label class="chk"><input type="checkbox" id="pullStartup" checked> แนบ log startup ของวันที่เลือกเสมอ</label>
+          <span class="hint">log startup (logstartup, StartUpLog, DebugStartupLog) มักเขียนตอนเปิดเครื่องตอนเช้า จึงอาจไม่อยู่ในช่วงเวลาที่เลือก</span>
+          <label class="ip-row">IP เครื่องสาขา (ไม่บังคับ)<input type="text" id="pullIp" placeholder="เช่น 111.152.169.111" inputmode="decimal" autocomplete="off"></label>
+          <span class="hint">ใช้สร้าง path สำหรับเปิดโฟลเดอร์ เว็บไม่ได้เชื่อมต่อไปที่เครื่องนี้</span>
+        </fieldset>
+        </div>
+      </div>
+
+      <div class="warnbox" id="pullWarn" hidden></div>
+
+      <div class="pull-out">
+        <div class="panel-head">
+          <h3>SQL สำหรับวางใน SSMS</h3>
+          <span class="actions"><span class="pill" id="pullMode"></span><button type="button" class="primary" id="pullCopy">คัดลอก SQL</button><span class="copy-ok" id="pullOk"></span></span>
+        </div>
+        <textarea id="pullSql" class="sql-out" rows="14" readonly spellcheck="false" aria-label="SQL ที่สร้าง"></textarea>
+      </div>
+
+      <div class="pull-after">
+        <h3>หลังรันเสร็จ</h3>
+        <div class="after-row"><span>เปิดโฟลเดอร์:</span><code id="pullUnc">\\&lt;IP&gt;\C$\pull_log</code><button type="button" id="pullUncCopy">คัดลอก</button></div>
+        <div class="after-row"><span>ดูไฟล์ที่ดึงมา:</span><code id="pullDirSql">EXEC master..xp_cmdshell 'dir C:\pull_log /s';</code><button type="button" id="pullDirCopy">คัดลอก</button></div>
+        <div class="after-row"><span>ลบเมื่อใช้เสร็จ:</span><label class="del-name">ชื่อโฟลเดอร์ <input type="text" id="pullDelName" placeholder="POS1_115269_20261024_224411" autocomplete="off"></label><code id="pullDelSql"></code><button type="button" id="pullDelCopy">คัดลอก</button></div>
+        <span class="hint">ใส่ชื่อโฟลเดอร์ที่ได้จากบรรทัด TO ตอนรันจริง คำสั่งจะลบเฉพาะโฟลเดอร์นั้นใน C:\pull_log</span>
+      </div>
     </section>
   </div>
 
@@ -288,6 +370,7 @@
 <script src="js/app/timeline.js"></script>
 <script src="js/app/promotions.js"></script>
 <script src="js/app/overview.js"></script>
+<script src="js/app/pull.js"></script>
 <script src="js/app/tabs.js"></script>
 <script src="js/app/main.js"></script>
 </body>

@@ -22,6 +22,8 @@ js/app/findings.js      การ์ด "จุดผิดปกติที่
 js/app/timeline.js      Timeline รวม: ตัวกรอง, ช่วงเวลา, แสดงบรรทัด, คัดลอกไป Excel
 js/app/promotions.js    ผลคำนวณโปร: หาบิล/Common/เลขใบเสร็จ, หน้าต่าง XML/JSON, ตารางโปร
 js/app/overview.js      กราฟ "ภาพรวมการเขียน log": ซูม, แถบภาพรวม, ช่วง log หาย
+js/app/pull.js          แท็บ "ดึง log": สร้าง SQL (xp_cmdshell + PowerShell) ดึง log ตามห้องและช่วงเวลา
+                        รายชื่อห้อง/โฟลเดอร์/ชื่อไฟล์อยู่ที่ PULL_ROOMS บนสุดของไฟล์
 js/app/tabs.js          แท็บของหน้า (ภาพรวม & Timeline · จุดผิดปกติ · หัวข้ออาการ · ไฟล์ · ตั้งค่า)  ← ก่อน main.js
 js/app/main.js          เริ่มทำงาน  ← โหลดสุดท้าย
 data/sample-data.js     ข้อมูลตัวอย่างของปุ่ม "โหลดตัวอย่าง" (ลบหรือแทนด้วย [] ได้ถ้าไม่ต้องการ)

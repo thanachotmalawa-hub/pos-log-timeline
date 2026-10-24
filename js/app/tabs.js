@@ -1,6 +1,6 @@
 /* Tabs: "ภาพรวม & Timeline" (overview chart, timeline, promotions) · จุดผิดปกติ · หัวข้ออาการ · ไฟล์ที่โหลด · ตั้งค่า.
    Load after the other js/app files (it wraps a few of their functions) and before main.js. */
-var TABS = ['main', 'cands', 'topics', 'files', 'settings'];
+var TABS = ['main', 'pull', 'cands', 'topics', 'files', 'settings'];
 var curTab = 'main';
 
 function switchTab(name, focusBtn) {

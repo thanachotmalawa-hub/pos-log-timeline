@@ -212,9 +212,15 @@
   <div class="tabpanel" role="tabpanel" id="tab-cands" aria-labelledby="tabbtn-cands" hidden>
     <section class="panel" aria-labelledby="hCands">
       <div class="panel-head">
-        <h2 id="hCands">จุดผิดปกติที่พบ</h2>
+        <h2 id="hCands">Log error ที่พบ</h2>
         <span class="sub" id="candsNote"></span>
       </div>
+      <div class="filters">
+        <label class="chk"><input type="checkbox" id="fErrOnly"> เฉพาะ ERROR / Exception</label>
+        <input type="text" id="errQ" placeholder="ค้นหาใน error เช่น ComboMessage" aria-label="ค้นหาใน error">
+        <span class="actions"><button type="button" id="btnCopyErrs">คัดลอกรายการ error</button><span class="copy-ok" id="errsOk"></span></span>
+      </div>
+      <div class="sub">รวมบรรทัดที่เป็น ERROR / Exception และบรรทัดที่มีคำไฮไลต์ (เช่น Return Code = 1, ไม่พบ, timeout, ติดต่อ Helpdesk) จัดกลุ่มตามข้อความ คลิกเวลาเพื่อเปิดใน Timeline</div>
       <div class="tally" id="tally"></div>
       <div class="cands" id="cands"></div>
     </section>

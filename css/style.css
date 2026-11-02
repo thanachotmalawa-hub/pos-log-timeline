@@ -317,3 +317,14 @@ pre.code mark.cur { outline: 2px solid var(--err); }
   .tl { height: 70vh; }
 }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+
+/* "จุดผิดปกติ" tab: error list */
+.errcard { border: 1px solid var(--line); border-left: 4px solid var(--gap); border-radius: 8px; padding: 10px 12px; display: grid; gap: 6px; background: var(--surface); min-width: 0; }
+.errcard.is-err { border-left-color: var(--err); }
+.err-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 13px; }
+.err-n { font-family: var(--f-mono); font-weight: 600; }
+.err-when { color: var(--muted); }
+.err-msg { font-size: 12.5px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+.errcard.is-err .err-msg { color: var(--err); }
+.err-times summary { cursor: pointer; font-size: 12px; color: var(--muted); }
+.err-times div { font-size: 12px; display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 4px; }

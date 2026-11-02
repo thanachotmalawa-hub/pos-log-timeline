@@ -22,7 +22,7 @@ function switchTab(name, focusBtn) {
 }
 
 function updateTabCounts() {
-  var nc = st.cands.length, nf = st.files.length;
+  var nc = (st.errGroups || []).length, nf = st.files.length;
   $('tabnCands').textContent = nc ? nc : '';
   $('tabnFiles').textContent = nf ? nf : '';
 }

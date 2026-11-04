@@ -185,6 +185,4 @@ function drawLanes() {
   $('lzPrev').onclick = function () { var G = laneGeom; if (!G) return; var s = span(); setRange(G.t0 - s * 0.5, G.t1 - s * 0.5); };
   $('lzNext').onclick = function () { var G = laneGeom; if (!G) return; var s = span(); setRange(G.t0 + s * 0.5, G.t1 + s * 0.5); };
   var rz; window.addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(function () { drawLanes(); renderRows(true); }, 150); });
-  try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', drawLanes); } catch (e) {}
-  try { new MutationObserver(drawLanes).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] }); } catch (e) {}
 })();

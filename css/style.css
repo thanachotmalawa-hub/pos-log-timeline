@@ -7,21 +7,28 @@ img{max-width:100%}
 
 /* Layout: an operator's console — toolbar, findings cards, swimlane strip, then a dense monospaced timeline. */
 :root {
-  --bg: #eef1f4;
+  /* theme: green / white / orange, back-office style (mint side, green table heads, outlined secondary buttons) */
+  --bg: #f7f7f7;
   --surface: #ffffff;
-  --sunken: #f6f8fa;
-  --ink: #16202b;
-  --muted: #5a6877;
-  --line: #d5dce4;
-  --accent: #1d5fa8;
+  --sunken: #f4f8f5;
+  --ink: #2f3331;
+  --muted: #6b716d;
+  --line: #dcdfdd;
+  --accent: #00954a;
   --accent-ink: #ffffff;
+  --accent-text: #00843f;
+  --accent-2: #f47b20;
+  --accent-2-soft: #fff1e7;
+  --mint: #e4f3ea;
+  --th-bg: #00a04f;
+  --th-ink: #ffffff;
   --gap: #b9650a;
   --gap-bg: #fbecd7;
   --err: #b42318;
   --err-bg: #fde8e6;
   --ok: #17784b;
   --ok-bg: #dcf2e6;
-  --sel: #dbe8f7;
+  --sel: #e4f3ea;
   --c-ACT: #1d5fa8; --c-ITP: #0b7f80; --c-DEBUG: #6b7787; --c-MSG: #a85a12;
   --c-COU: #7b3fa0; --c-EDC: #b1336f; --c-CMS: #3d7d2e; --c-SMF: #8a6d00; --c-PMS: #4a6b8a; --c-BOOT: #17784b; --c-WIN: #9a3b12; --c-OTHER: #8a8f98;
   --f-ui: "IBM Plex Sans Thai", "Leelawadee UI", Tahoma, system-ui, sans-serif;
@@ -29,17 +36,17 @@ img{max-width:100%}
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0f151c; --surface: #161e27; --sunken: #121921; --ink: #e3e9ef; --muted: #93a1b1; --line: #2a3542;
-    --accent: #6fa8e8; --accent-ink: #0b1220; --gap: #f0a54a; --gap-bg: #3a2a14; --err: #ff8a7d; --err-bg: #3d1a17;
-    --ok: #5fd39a; --ok-bg: #133325; --sel: #1f3350;
+    --bg: #0d1611; --surface: #142019; --sunken: #101a14; --ink: #e4efe7; --muted: #95aa9c; --line: #263a2d;
+    --accent: #2fbf6f; --accent-ink: #04170c; --accent-text: #57d98f; --accent-2: #ff9447; --accent-2-soft: #3a2414; --mint: #16291e; --th-bg: #17713f; --th-ink: #ffffff; --gap: #f0a54a; --gap-bg: #3a2a14; --err: #ff8a7d; --err-bg: #3d1a17;
+    --ok: #5fd39a; --ok-bg: #133325; --sel: #1a3a27;
     --c-ACT: #6fa8e8; --c-ITP: #3fc7c4; --c-DEBUG: #9aa7b6; --c-MSG: #f0a54a; --c-COU: #c08ee0; --c-EDC: #ef7fb2; --c-CMS: #8bcf72; --c-SMF: #e0c25a; --c-PMS: #9db8d4; --c-BOOT: #5fd39a; --c-WIN: #f08a5d; --c-OTHER: #a3a9b2;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0f151c; --surface: #161e27; --sunken: #121921; --ink: #e3e9ef; --muted: #93a1b1; --line: #2a3542;
-  --accent: #6fa8e8; --accent-ink: #0b1220; --gap: #f0a54a; --gap-bg: #3a2a14; --err: #ff8a7d; --err-bg: #3d1a17;
-  --ok: #5fd39a; --ok-bg: #133325; --sel: #1f3350;
+  --bg: #0d1611; --surface: #142019; --sunken: #101a14; --ink: #e4efe7; --muted: #95aa9c; --line: #263a2d;
+  --accent: #2fbf6f; --accent-ink: #04170c; --accent-text: #57d98f; --accent-2: #ff9447; --accent-2-soft: #3a2414; --mint: #16291e; --th-bg: #17713f; --th-ink: #ffffff; --gap: #f0a54a; --gap-bg: #3a2a14; --err: #ff8a7d; --err-bg: #3d1a17;
+  --ok: #5fd39a; --ok-bg: #133325; --sel: #1a3a27;
   --c-ACT: #6fa8e8; --c-ITP: #3fc7c4; --c-DEBUG: #9aa7b6; --c-MSG: #f0a54a; --c-COU: #c08ee0; --c-EDC: #ef7fb2; --c-CMS: #8bcf72; --c-SMF: #e0c25a; --c-PMS: #9db8d4; --c-BOOT: #5fd39a; --c-WIN: #f08a5d; --c-OTHER: #a3a9b2;
   color-scheme: dark;
 }
@@ -53,7 +60,8 @@ h2 { font-size: 15px; margin: 0; font-weight: 600; text-wrap: balance; }
 .sub { color: var(--muted); font-size: 13px; }
 .mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
 button, .btn { font: inherit; font-size: 13px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 6px; padding: 6px 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-button:hover, .btn:hover { border-color: var(--accent); }
+button:hover, .btn:hover { border-color: var(--accent-2); }
+button.primary:hover, .btn.primary:hover { background: color-mix(in srgb, var(--accent) 88%, #000); border-color: var(--accent-2); }
 button.primary, .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
 button:focus-visible, .btn:focus-within, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 input[type=text], input[type=number], select, textarea { font: inherit; font-size: 13px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; }
@@ -240,7 +248,7 @@ textarea.fallback { height: 160px; }
 .tabs { position: sticky; top: 0; z-index: 20; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: thin; background: var(--bg); border-bottom: 1px solid var(--line); padding-top: 6px; margin-bottom: -4px; }
 .tabs button[role=tab] { border: 1px solid transparent; border-bottom: 0; border-radius: 8px 8px 0 0; background: transparent; color: var(--muted); padding: 9px 16px; font-size: 14px; font-weight: 500; flex: none; position: relative; top: 1px; }
 .tabs button[role=tab]:hover { color: var(--ink); border-color: transparent; background: var(--sunken); }
-.tabs button[role=tab][aria-selected=true] { background: var(--surface); color: var(--ink); font-weight: 600; border-color: var(--line); box-shadow: inset 0 3px 0 var(--accent); }
+.tabs button[role=tab][aria-selected=true] { background: var(--surface); color: var(--accent); font-weight: 600; border-color: var(--line); box-shadow: inset 0 3px 0 var(--accent-2); }
 .tabn { font-family: var(--f-mono); font-size: 11px; font-weight: 600; background: var(--gap-bg); color: var(--gap); border-radius: 999px; padding: 0 7px; }
 .tabn:empty { display: none; }
 .tabpanel { display: grid; gap: 16px; min-width: 0; }
@@ -253,7 +261,7 @@ textarea.fallback { height: 160px; }
 .pull-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 14px; align-items: start; }
 .pull-col { display: grid; gap: 14px; align-content: start; min-width: 0; }
 .pull-box { border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px 14px; margin: 0; display: grid; gap: 10px; min-width: 0; }
-.pull-box legend { font-weight: 600; font-size: 14px; padding: 0 6px; }
+.pull-box legend { font-weight: 600; font-size: 14px; padding: 0 6px; color: var(--accent); }
 .pull-box .hint { font-size: 12px; color: var(--muted); margin-top: -4px; }
 .pull-box .dry-note { font-size: 12px; color: var(--gap); background: var(--gap-bg); border-radius: 6px; padding: 4px 8px; margin-top: -4px; }
 .room-list { display: grid; gap: 6px; }
@@ -329,3 +337,39 @@ pre.code mark.cur { outline: 2px solid var(--err); }
 .errcard.is-err .err-msg { color: var(--err); }
 .err-times summary { cursor: pointer; font-size: 12px; color: var(--muted); }
 .err-times div { font-size: 12px; display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 4px; }
+
+
+/* ===== Back-office style theme (overrides) ===== */
+header.top { background: var(--mint); border-radius: 10px; padding: 14px 18px; border-left: 5px solid var(--accent); }
+header.top h1 { font-size: 24px; color: var(--ink); }
+header.top h1::after { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-2); margin-left: 8px; vertical-align: middle; }
+a, .jlist .j.k-form .tx, .qchip.more { color: var(--accent-text); }
+button, .btn { border-radius: 6px; border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); color: var(--accent-text); background: var(--surface); }
+button:hover, .btn:hover { border-color: var(--accent); background: var(--mint); }
+button.primary, .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 700; }
+button.primary:hover, .btn.primary:hover { background: color-mix(in srgb, var(--accent) 86%, #000); border-color: var(--accent); }
+button:disabled, button:disabled:hover { opacity: .55; cursor: not-allowed; background: var(--surface); }
+button.primary:disabled { background: var(--accent); }
+input[type=text], input[type=number], input[type=date], input[type=time], select, textarea { border: 1px solid color-mix(in srgb, var(--ink) 18%, var(--surface)); border-radius: 4px; background: var(--surface); color: var(--ink); }
+input[type=date], input[type=time] { font-size: 13px; padding: 5px 8px; }
+.panel { border-color: var(--line); box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+.panel h2, .panel h3 { color: var(--ink); }
+/* tabs = menu items: green text, active filled green */
+.tabs { background: var(--bg); border-bottom: 0; gap: 6px; padding: 6px 0; }
+.tabs button[role=tab] { color: var(--accent-text); border: 0; border-radius: 6px; top: 0; font-weight: 500; }
+.tabs button[role=tab]:hover { background: var(--mint); color: var(--accent-text); }
+.tabs button[role=tab][aria-selected=true] { background: var(--accent); color: var(--accent-ink); box-shadow: none; font-weight: 700; }
+.tabs button[role=tab][aria-selected=true] .tabn { background: rgba(255,255,255,.25); color: #fff; }
+/* green table heads with white separators */
+th { background: var(--th-bg); color: var(--th-ink); font-weight: 600; font-size: 12.5px; border-bottom: 0; border-right: 1px solid rgba(255,255,255,.55); padding: 9px 10px; }
+th:last-child { border-right: 0; }
+thead tr:first-child th:first-child { border-top-left-radius: 8px; }
+thead tr:first-child th:last-child { border-top-right-radius: 8px; }
+tbody tr:hover td { background: var(--sunken); }
+/* pull tab boxes */
+.pull-box { border-color: var(--line); background: var(--surface); }
+.pull-box legend { color: var(--accent-text); }
+.room { border-radius: 6px; }
+.room.on { border-color: var(--accent); background: var(--mint); }
+.range-say, .banner { background: var(--mint); }
+.banner { border-color: var(--accent); }

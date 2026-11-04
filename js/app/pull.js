@@ -17,7 +17,7 @@ var PULL_ROOMS = [
   { id: 'COU',           path: 'COU\\Log',                series: [['log_*', 0]],                                        ex: 'log_20261024.txt' }
 ];
 var PULL_KEY = 'posLogTimeline.pull.v1';
-var PULL_VER = 'รุ่น 2026-11-04c (Event Log + ข้อมูลเครื่อง)';
+var PULL_VER = 'รุ่น 2026-11-04e (Event Log + ข้อมูลเครื่อง)';
 // Windows Event Log (Get-EventLog, PowerShell 2.0+). Saved files go to <pull folder>\WINEVENT\EVENT_<log>.txt
 var PULL_EVLOGS = [
   { id: 'Application', ex: 'Application Error / Application Hang / .NET Runtime ของโปรแกรม POS' },

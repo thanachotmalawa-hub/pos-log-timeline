@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="css/style.css?v=20261104b">
+<link rel="stylesheet" href="css/style.css?v=20261104c">
 </head>
 <body>
 <div class="wrap">
@@ -202,9 +202,10 @@
         <fieldset class="pull-box">
           <legend>5. ข้อมูลเครื่อง (OS / สเปค)</legend>
           <label class="chk"><input type="checkbox" id="pullSys" checked> ตรวจ OS / สเปคเครื่อง</label>
+          <label class="chk"><input type="checkbox" id="pullSysMore"> รายละเอียดเพิ่ม: SMART, PowerShell / .NET, process (Top memory / POS proc)</label>
           <label class="chk"><input type="checkbox" id="pullSysSave" checked> บันทึกไฟล์ใน pull_log (SYSINFO\SYSINFO.txt)</label>
           <span class="dry-note" hidden>โหมดทดสอบ (DryRun): ยังไม่บันทึกไฟล์ แสดงในผลลัพธ์อย่างเดียว · เอาติ๊ก "ทดสอบ" ออกเพื่อบันทึกจริง</span>
-          <span class="hint">OS / Service Pack, เวลาเปิดเครื่องล่าสุด (uptime), CPU + load, RAM ว่าง, Disk ว่าง, สถานะฮาร์ดดิสก์ (SMART ถ้าอ่านได้), เวอร์ชัน PowerShell / .NET / SQL Server, process ที่ใช้ RAM มากสุด 5 อันดับ และ process ของ POS (RAM / handles / threads) · ค่าเป็นของ "ตอนที่รัน" ไม่ใช่ตอนเกิดเหตุ</span>
+          <span class="hint">OS / Service Pack, เวลาเปิดเครื่องล่าสุด (uptime), CPU + load, RAM ว่าง, Disk ว่าง, สถานะฮาร์ดดิสก์, เวอร์ชัน SQL Server · ติ๊ก "รายละเอียดเพิ่ม" ถ้าต้องการ SMART, PowerShell / .NET, process ที่ใช้ RAM มากสุด 5 อันดับ และ process ของ POS · ค่าเป็นของ "ตอนที่รัน" ไม่ใช่ตอนเกิดเหตุ</span>
         </fieldset>
         </div>
       </div>
@@ -383,18 +384,18 @@
 
 <!-- libraries & data -->
 <script src="vendor/jszip.min.js"></script>
-<script src="data/sample-data.js?v=20261104b"></script>
+<script src="data/sample-data.js?v=20261104c"></script>
 <!-- analysis (no DOM) -->
-<script src="js/core.js?v=20261104b"></script>
+<script src="js/core.js?v=20261104c"></script>
 <!-- page: order matters, state.js first and main.js last -->
-<script src="js/app/state.js?v=20261104b"></script>
-<script src="js/app/files.js?v=20261104b"></script>
-<script src="js/app/findings.js?v=20261104b"></script>
-<script src="js/app/timeline.js?v=20261104b"></script>
-<script src="js/app/promotions.js?v=20261104b"></script>
-<script src="js/app/overview.js?v=20261104b"></script>
-<script src="js/app/pull.js?v=20261104b"></script>
-<script src="js/app/tabs.js?v=20261104b"></script>
-<script src="js/app/main.js?v=20261104b"></script>
+<script src="js/app/state.js?v=20261104c"></script>
+<script src="js/app/files.js?v=20261104c"></script>
+<script src="js/app/findings.js?v=20261104c"></script>
+<script src="js/app/timeline.js?v=20261104c"></script>
+<script src="js/app/promotions.js?v=20261104c"></script>
+<script src="js/app/overview.js?v=20261104c"></script>
+<script src="js/app/pull.js?v=20261104c"></script>
+<script src="js/app/tabs.js?v=20261104c"></script>
+<script src="js/app/main.js?v=20261104c"></script>
 </body>
 </html>

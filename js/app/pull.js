@@ -72,6 +72,38 @@ function pullEvPs() {
   ].join('');
 }
 
+/* Machine info (WMI, PowerShell 2.0+); {DRY} {SAVE} {STAMP} filled by SQL REPLACE. Read-only: OS, uptime/last boot,
+   CPU/RAM/pagefile, disks + physical drive status (SMART when allowed), PowerShell/.NET, top processes, POS processes.
+   SAVE writes <same pull folder>\SYSINFO\SYSINFO.txt (no time column, so the timeline ignores it). */
+function pullSysPs() {
+  return [
+    "$inv=[Globalization.CultureInfo]::InvariantCulture;$dry={DRY};$save={SAVE};$o=@();$now=Get-Date;",
+    "$out='C:\\pull_log\\'+$env:COMPUTERNAME+'_{STAMP}\\SYSINFO';",
+    "function L($k,$v){$script:o+=($k.PadRight(11)+': '+$v)};function G($b){[math]::Round($b/1GB,1)};",
+    "try{$os=Get-WmiObject Win32_OperatingSystem;$cs=Get-WmiObject Win32_ComputerSystem;$boot=$os.ConvertToDateTime($os.LastBootUpTime);$up=$now-$boot;",
+    "L 'Computer' ($env:COMPUTERNAME+'  '+$cs.Manufacturer+' '+$cs.Model);",
+    "L 'OS' ($os.Caption+' SP'+$os.ServicePackMajorVersion+'  ver '+$os.Version+'  '+$os.OSArchitecture);",
+    "L 'Installed' ($os.ConvertToDateTime($os.InstallDate).ToString('yyyy-MM-dd',$inv));",
+    "L 'Last boot' ($boot.ToString('yyyy-MM-dd HH:mm:ss',$inv)+'  uptime '+$up.Days+'d '+$up.Hours+'h '+$up.Minutes+'m');",
+    "L 'Now' ($now.ToString('yyyy-MM-dd HH:mm:ss',$inv)+'  '+[TimeZone]::CurrentTimeZone.StandardName);",
+    "$tm=$cs.TotalPhysicalMemory;$fm=$os.FreePhysicalMemory*1KB;L 'RAM' ('total '+(G $tm)+' GB  free '+(G $fm)+' GB  used '+[math]::Round(100-$fm*100/$tm)+' pct');",
+    "L 'Virtual' ('total '+(G ($os.TotalVirtualMemorySize*1KB))+' GB  free '+(G ($os.FreeVirtualMemory*1KB))+' GB')}catch{L 'ERR OS' $_.Exception.Message};",
+    "try{$b=Get-WmiObject Win32_BIOS;L 'BIOS' ($b.SMBIOSBIOSVersion+'  '+$b.ReleaseDate.Substring(0,8)+'  SN '+$b.SerialNumber)}catch{};",
+    "try{foreach($c in @(Get-WmiObject Win32_Processor)){L 'CPU' (($c.Name -replace '\\s+',' ').Trim()+'  '+$c.NumberOfCores+' core/'+$c.NumberOfLogicalProcessors+' thread  load '+$c.LoadPercentage+' pct')}}catch{L 'ERR CPU' $_.Exception.Message};",
+    "try{foreach($d in @(Get-WmiObject Win32_LogicalDisk -Filter 'DriveType=3')){L ('Disk '+$d.DeviceID) ('size '+(G $d.Size)+' GB  free '+(G $d.FreeSpace)+' GB  ('+[math]::Round($d.FreeSpace*100/$d.Size)+' pct free)  '+$d.FileSystem)}}catch{L 'ERR Disk' $_.Exception.Message};",
+    "try{foreach($d in @(Get-WmiObject Win32_DiskDrive)){L 'Drive' ($d.Model+'  '+(G $d.Size)+' GB  '+$d.InterfaceType+'  status '+$d.Status)}}catch{};",
+    "try{foreach($s in @(Get-WmiObject -Namespace root\\wmi MSStorageDriver_FailurePredictStatus -ErrorAction Stop)){L 'SMART' ('PredictFailure='+$s.PredictFailure+'  reason '+$s.Reason)}}catch{L 'SMART' 'not available (no permission / not supported)'};",
+    "L 'PowerShell' ([string]$PSVersionTable.PSVersion+'  .NET CLR '+[Environment]::Version);",
+    "try{$p=@(Get-Process);L 'Processes' ([string]$p.Count+' running');",
+    "foreach($x in @($p|Sort-Object WorkingSet -Descending|Select-Object -First 5)){L 'Top memory' ($x.ProcessName+'  '+[math]::Round($x.WorkingSet/1MB)+' MB  handles '+$x.HandleCount+'  cpu '+[math]::Round($x.TotalProcessorTime.TotalSeconds)+' s')};",
+    "foreach($x in @($p|Where-Object{$_.ProcessName -like 'th.co.gosoft*'}|Sort-Object ProcessName)){L 'POS proc' (($x.ProcessName -replace '^th\\.co\\.gosoft\\.sts\\.','')+'  '+[math]::Round($x.WorkingSet/1MB)+' MB  handles '+$x.HandleCount+'  threads '+$x.Threads.Count)}}catch{L 'ERR Proc' $_.Exception.Message};",
+    "'SYSINFO '+$env:COMPUTERNAME;$o;",
+    "if($save){if($dry){'  DRY RUN: SYSINFO not saved'}else{try{if(-not(Test-Path $out)){New-Item -Path $out -ItemType Directory -Force -ErrorAction Stop|Out-Null};$fp=Join-Path $out 'SYSINFO.txt';",
+    "[IO.File]::WriteAllLines($fp,[string[]]$o,(New-Object Text.UTF8Encoding($true)));'SAVE '+$fp}catch{'ERR  SYSINFO : '+$_.Exception.Message}}};",
+    "'DONE SYSINFO'"
+  ].join('');
+}
+
 function pullSql(o) {
   var sq = function (s) { return String(s).replace(/'/g, "''"); };
   var ev = o.evLogs || [];
@@ -81,6 +113,7 @@ function pullSql(o) {
     '/* POS Log Timeline · ดึง log · สร้างเมื่อ ' + o.made,
     '   ห้อง: ' + (o.rooms.length ? o.rooms.join(', ') : '(ไม่ดึงห้อง log)'),
     '   Windows Event Log: ' + (ev.length ? ev.join(', ') + ' · ' + (o.evAll ? 'ทุกระดับ' : 'Error/Warning + ปิด-เปิดเครื่อง') + ' · ' + evHow : '(ไม่ดึง)'),
+    '   ข้อมูลเครื่อง (OS / สเปค): ' + (o.sys ? 'ตรวจ' + (o.sysSave ? ' + บันทึกไฟล์' : '') : '(ไม่ตรวจ)'),
     '   ช่วงเวลา: ' + o.from + ' ถึง ' + o.to + (o.dry ? ' · โหมดทดสอบ (ไม่ copy / ไม่บันทึกไฟล์)' : ' · copy จริง'),
     '   วางใน SSMS ที่ต่อเครื่องสาขา กด Ctrl+T (ผลเป็นข้อความ) แล้วกด Execute (F5)',
     '   อ่านอย่างเดียว: ไม่ลบหรือแก้ไฟล์ log / event log ต้นฉบับ เขียนเฉพาะใน C:\\pull_log */',
@@ -94,6 +127,8 @@ function pullSql(o) {
     'DECLARE @EvAll   bit = ' + (o.evAll ? 1 : 0) + ';   -- 0 = Error/Warning + ปิด-เปิดเครื่อง · 1 = ทุกระดับ (รวม Information)',
     'DECLARE @EvShow  bit = ' + (o.evShow ? 1 : 0) + ';   -- 1 = แสดง event ในผลลัพธ์ของ SSMS',
     'DECLARE @EvSave  bit = ' + (o.evSave ? 1 : 0) + ';   -- 1 = บันทึกเป็นไฟล์ใน <โฟลเดอร์ pull_log เดียวกัน>\\WINEVENT',
+    'DECLARE @SysInfo bit = ' + (o.sys ? 1 : 0) + ';   -- 1 = ตรวจ OS / สเปคเครื่อง / RAM / Disk / process',
+    'DECLARE @SysSave bit = ' + (o.sysSave ? 1 : 0) + ';   -- 1 = บันทึกเป็นไฟล์ <โฟลเดอร์ pull_log เดียวกัน>\\SYSINFO\\SYSINFO.txt',
     '',
     "IF (SELECT CONVERT(int, value_in_use) FROM sys.configurations WHERE name = 'xp_cmdshell') = 0",
     'BEGIN',
@@ -119,6 +154,15 @@ function pullSql(o) {
     "  SET @ps = '" + sq(pullEvPs()) + "';",
     "  SET @ps = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@ps, '{FROM}', @From), '{TO}', @To), '{LOGS}', REPLACE(@EvLogs, ' ', '')),",
     "    '{DRY}', " + b('@DryRun') + "), '{ALL}', " + b('@EvAll') + "), '{SHOW}', " + b('@EvShow') + "), '{SAVE}', " + b('@EvSave') + "), '{STAMP}', @Stamp);",
+    "  SET @cmd = 'powershell -NoProfile -NonInteractive -Command \"' + @ps + '\"';",
+    '  EXEC master..xp_cmdshell @cmd;',
+    'END;',
+    '',
+    'IF @SysInfo = 1',
+    'BEGIN',
+    "  SELECT @@VERSION AS [SQL Server];",
+    "  SET @ps = '" + sq(pullSysPs()) + "';",
+    "  SET @ps = REPLACE(REPLACE(REPLACE(@ps, '{DRY}', " + b('@DryRun') + "), '{SAVE}', " + b('@SysSave') + "), '{STAMP}', @Stamp);",
     "  SET @cmd = 'powershell -NoProfile -NonInteractive -Command \"' + @ps + '\"';",
     '  EXEC master..xp_cmdshell @cmd;',
     'END;',
@@ -155,20 +199,20 @@ function sqlDT(d) { return isoDate(d) + ' ' + hhmm(d) + ':00'; }
 
 /* ---------- state ---------- */
 var pullState = (function () {
-  var s = { rooms: PULL_ROOMS.map(function (r) { return r.id; }), startup: true, evLogs: PULL_EVLOGS.map(function (r) { return r.id; }), evAll: false, evShow: true, evSave: true };
+  var s = { rooms: PULL_ROOMS.map(function (r) { return r.id; }), startup: true, evLogs: PULL_EVLOGS.map(function (r) { return r.id; }), evAll: false, evShow: true, evSave: true, sys: true, sysSave: true };
   try {
     var j = JSON.parse(localStorage.getItem(PULL_KEY) || 'null');
     if (j) {
       if (Array.isArray(j.rooms)) s.rooms = j.rooms;
       if (j.startup != null) s.startup = !!j.startup;
       if (Array.isArray(j.evLogs)) s.evLogs = j.evLogs.filter(function (x) { return PULL_EVLOGS.some(function (r) { return r.id === x; }); });
-      ['evAll', 'evShow', 'evSave'].forEach(function (k) { if (j[k] != null) s[k] = !!j[k]; });
+      ['evAll', 'evShow', 'evSave', 'sys', 'sysSave'].forEach(function (k) { if (j[k] != null) s[k] = !!j[k]; });
     }
   } catch (e) {}
   return s;
 })();
 function savePull() {
-  try { localStorage.setItem(PULL_KEY, JSON.stringify({ rooms: pullState.rooms, startup: pullState.startup, evLogs: pullState.evLogs, evAll: pullState.evAll, evShow: pullState.evShow, evSave: pullState.evSave })); } catch (e) {}
+  try { localStorage.setItem(PULL_KEY, JSON.stringify({ rooms: pullState.rooms, startup: pullState.startup, evLogs: pullState.evLogs, evAll: pullState.evAll, evShow: pullState.evShow, evSave: pullState.evSave, sys: pullState.sys, sysSave: pullState.sysSave })); } catch (e) {}
 }
 
 function renderPullEv() {
@@ -188,6 +232,8 @@ function renderPullEv() {
   $('pullEvAll').value = pullState.evAll ? '1' : '0';
   $('pullEvShow').checked = pullState.evShow;
   $('pullEvSave').checked = pullState.evSave;
+  $('pullSys').checked = pullState.sys;
+  $('pullSysSave').checked = pullState.sysSave;
 }
 
 function renderPullRooms() {
@@ -213,10 +259,14 @@ function updatePull() {
   pullState.evAll = $('pullEvAll').value === '1';
   pullState.evShow = $('pullEvShow').checked;
   pullState.evSave = $('pullEvSave').checked;
+  pullState.sys = $('pullSys').checked;
+  pullState.sysSave = $('pullSysSave').checked;
+  $('pullSysSave').disabled = !pullState.sys;
+  Array.prototype.forEach.call(document.querySelectorAll('.dry-note'), function (n) { n.hidden = !dry; });
   savePull();
   var evOn = pullState.evLogs.length > 0 && (pullState.evShow || pullState.evSave);
   $('pullRoomCount').textContent = 'เลือก ' + pullState.rooms.length + ' / ' + PULL_ROOMS.length + ' ห้อง';
-  if (!pullState.rooms.length && !evOn) warn.push('ยังไม่ได้เลือกห้อง log หรือ Windows Event Log');
+  if (!pullState.rooms.length && !evOn && !pullState.sys) warn.push('ยังไม่ได้เลือกห้อง log, Windows Event Log หรือข้อมูลเครื่อง');
   if (pullState.evLogs.length && !pullState.evShow && !pullState.evSave) warn.push('Windows Event Log: เลือกอย่างน้อย 1 แบบ (แสดงในผลลัพธ์ / บันทึกไฟล์)');
   if (evOn && pullState.evAll && f && t && t - f > 6 * 3600000) warn.push('Event Log ทุกระดับในช่วงยาวกว่า 6 ชม. อาจมีหลายพันบรรทัด ลองเลือกเฉพาะ Error/Warning');
   if (!f || !t) warn.push('ใส่วันที่และเวลาให้ครบ');
@@ -235,7 +285,7 @@ function updatePull() {
   $('pullCopy').disabled = !!hard.length;
   $('pullSql').value = hard.length ? '-- ' + hard.join('\n-- ') : pullSql({
     from: sqlDT(f), to: sqlDT(t), rooms: pullState.rooms, dry: dry, startup: pullState.startup,
-    evLogs: evOn ? pullState.evLogs : [], evAll: pullState.evAll, evShow: pullState.evShow, evSave: pullState.evSave,
+    evLogs: evOn ? pullState.evLogs : [], evAll: pullState.evAll, evShow: pullState.evShow, evSave: pullState.evSave, sys: pullState.sys, sysSave: pullState.sysSave,
     made: new Date().toISOString().slice(0, 16).replace('T', ' ')
   });
   // after-run helper: delete only the folder that was named
@@ -259,7 +309,7 @@ function quickRange(kind) {
   quickRange('last1');
   $('pullAll').onclick = function () { pullState.rooms = PULL_ROOMS.map(function (r) { return r.id; }); savePull(); renderPullRooms(); updatePull(); };
   $('pullNone').onclick = function () { pullState.rooms = []; savePull(); renderPullRooms(); updatePull(); };
-  ['pullFromD', 'pullFromT', 'pullToD', 'pullToT', 'pullDry', 'pullStartup', 'pullEvAll', 'pullEvShow', 'pullEvSave'].forEach(function (id) { $(id).onchange = updatePull; $(id).oninput = updatePull; });
+  ['pullFromD', 'pullFromT', 'pullToD', 'pullToT', 'pullDry', 'pullStartup', 'pullEvAll', 'pullEvShow', 'pullEvSave', 'pullSys', 'pullSysSave'].forEach(function (id) { $(id).onchange = updatePull; $(id).oninput = updatePull; });
   $('pullDelName').oninput = updatePull;
   Array.prototype.forEach.call(document.querySelectorAll('[data-qr]'), function (b) { b.onclick = function () { quickRange(b.dataset.qr); }; });
   $('pullIncGo').onclick = function () {

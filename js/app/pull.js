@@ -17,6 +17,7 @@ var PULL_ROOMS = [
   { id: 'COU',           path: 'COU\\Log',                series: [['log_*', 0]],                                        ex: 'log_20261024.txt' }
 ];
 var PULL_KEY = 'posLogTimeline.pull.v1';
+var PULL_VER = 'รุ่น 2026-11-04b (Event Log + ข้อมูลเครื่อง)';
 // Windows Event Log (Get-EventLog, PowerShell 2.0+). Saved files go to <pull folder>\WINEVENT\EVENT_<log>.txt
 var PULL_EVLOGS = [
   { id: 'Application', ex: 'Application Error / Application Hang / .NET Runtime ของโปรแกรม POS' },
@@ -267,7 +268,7 @@ function updatePull() {
   var evOn = pullState.evLogs.length > 0 && (pullState.evShow || pullState.evSave);
   $('pullRoomCount').textContent = 'เลือก ' + pullState.rooms.length + ' / ' + PULL_ROOMS.length + ' ห้อง';
   if (!pullState.rooms.length && !evOn && !pullState.sys) warn.push('ยังไม่ได้เลือกห้อง log, Windows Event Log หรือข้อมูลเครื่อง');
-  if (pullState.evLogs.length && !pullState.evShow && !pullState.evSave) warn.push('Windows Event Log: เลือกอย่างน้อย 1 แบบ (แสดงในผลลัพธ์ / บันทึกไฟล์)');
+  if (pullState.evLogs.length && !pullState.evShow && !pullState.evSave) warn.push('Windows Event Log จะถูกข้าม: ยังไม่ได้เลือกแบบ (แสดงในผลลัพธ์ / บันทึกไฟล์)');
   if (evOn && pullState.evAll && f && t && t - f > 6 * 3600000) warn.push('Event Log ทุกระดับในช่วงยาวกว่า 6 ชม. อาจมีหลายพันบรรทัด ลองเลือกเฉพาะ Error/Warning');
   if (!f || !t) warn.push('ใส่วันที่และเวลาให้ครบ');
   else if (t <= f) warn.push('เวลาสิ้นสุดต้องหลังเวลาเริ่ม');
@@ -278,7 +279,7 @@ function updatePull() {
     $('pullSay').innerHTML = 'ดึง log <b>' + thaiDate(f) + '</b> เวลา <b>' + hhmm(f) + '</b> (' + thaiClock(f.getHours(), f.getMinutes()) + ') ถึง ' +
       (same ? '' : '<b>' + thaiDate(t) + '</b> ') + 'เวลา <b>' + hhmm(t) + '</b> (' + thaiClock(t.getHours(), t.getMinutes()) + ') · รวม ' + dur;
   } else $('pullSay').textContent = '';
-  var hard = warn.filter(function (w) { return !/ยาวกว่า|หลายพัน/.test(w); });
+  var hard = warn.filter(function (w) { return !/ยาวกว่า|หลายพัน|จะถูกข้าม/.test(w); });
   $('pullWarn').hidden = !warn.length; $('pullWarn').textContent = warn.join(' · ');
   $('pullMode').textContent = dry ? 'ทดสอบ: แสดงรายการ ไม่ copy' : 'copy จริง';
   $('pullMode').className = 'pill ' + (dry ? 'ok' : 'err');
@@ -305,6 +306,7 @@ function quickRange(kind) {
 (function initPull() {
   renderPullRooms();
   renderPullEv();
+  if ($('pullVer')) $('pullVer').textContent = PULL_VER;
   $('pullStartup').checked = pullState.startup;
   quickRange('last1');
   $('pullAll').onclick = function () { pullState.rooms = PULL_ROOMS.map(function (r) { return r.id; }); savePull(); renderPullRooms(); updatePull(); };

@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css?v=20261104b">
 </head>
 <body>
 <div class="wrap">
@@ -135,7 +135,7 @@
     <section class="panel" aria-labelledby="hPull">
       <div class="panel-head">
         <h2 id="hPull">ดึง log จากเครื่องสาขาผ่าน SQL</h2>
-        <span class="sub">เลือกห้องและช่วงเวลา → คัดลอก SQL ไปรันใน SSMS → เปิดโฟลเดอร์ที่ได้ในเว็บนี้</span>
+        <span class="sub">เลือกห้องและช่วงเวลา → คัดลอก SQL ไปรันใน SSMS → เปิดโฟลเดอร์ที่ได้ในเว็บนี้ · <span id="pullVer"></span></span>
       </div>
       <ol class="pull-steps">
         <li><b>เลือกห้อง log</b>, <b>ช่วงเวลา</b> และ <b>Windows Event Log</b> (Application / System) ด้านล่าง</li>
@@ -383,18 +383,18 @@
 
 <!-- libraries & data -->
 <script src="vendor/jszip.min.js"></script>
-<script src="data/sample-data.js"></script>
+<script src="data/sample-data.js?v=20261104b"></script>
 <!-- analysis (no DOM) -->
-<script src="js/core.js"></script>
+<script src="js/core.js?v=20261104b"></script>
 <!-- page: order matters, state.js first and main.js last -->
-<script src="js/app/state.js"></script>
-<script src="js/app/files.js"></script>
-<script src="js/app/findings.js"></script>
-<script src="js/app/timeline.js"></script>
-<script src="js/app/promotions.js"></script>
-<script src="js/app/overview.js"></script>
-<script src="js/app/pull.js"></script>
-<script src="js/app/tabs.js"></script>
-<script src="js/app/main.js"></script>
+<script src="js/app/state.js?v=20261104b"></script>
+<script src="js/app/files.js?v=20261104b"></script>
+<script src="js/app/findings.js?v=20261104b"></script>
+<script src="js/app/timeline.js?v=20261104b"></script>
+<script src="js/app/promotions.js?v=20261104b"></script>
+<script src="js/app/overview.js?v=20261104b"></script>
+<script src="js/app/pull.js?v=20261104b"></script>
+<script src="js/app/tabs.js?v=20261104b"></script>
+<script src="js/app/main.js?v=20261104b"></script>
 </body>
 </html>

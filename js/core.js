@@ -1,7 +1,7 @@
 /* ===== core: pure log parsing & analysis (no DOM) ===== */
 var Core = (function () {
-  var SRC_ORDER = ['ACT', 'ITP', 'DEBUG', 'MSG', 'COU', 'EDC', 'CMS', 'SMF', 'PMS', 'BOOT', 'OTHER'];
-  var SRC_LABEL = { ACT: 'Activity', ITP: 'ITP', DEBUG: 'Debug', MSG: 'Msg', COU: 'Counter Service', EDC: 'EDC', CMS: 'CMS', SMF: 'SignOn (SMF)', PMS: 'PMS', BOOT: 'ITP Startup', OTHER: 'อื่น ๆ' };
+  var SRC_ORDER = ['ACT', 'ITP', 'DEBUG', 'MSG', 'COU', 'EDC', 'CMS', 'SMF', 'PMS', 'BOOT', 'WIN', 'OTHER'];
+  var SRC_LABEL = { ACT: 'Activity', ITP: 'ITP', DEBUG: 'Debug', MSG: 'Msg', COU: 'Counter Service', EDC: 'EDC', CMS: 'CMS', SMF: 'SignOn (SMF)', PMS: 'PMS', BOOT: 'ITP Startup', WIN: 'Windows Event', OTHER: 'อื่น ๆ' };
 
   var DEFAULTS = {
     gapMin: 6,
@@ -194,11 +194,12 @@ var Core = (function () {
     ['CMS', /\|log\.(saf\.)?cms/i],
     ['SMF', /\|log\.smf\./i],
     ['PMS', /\|log\.saf\.pms/i],
+    ['WIN', /\|log\.win\./],
     ['EDC', /SmartTermProxy|Cappuccino|SendCommand2EDC|WriteLogJCS|ReadKey Call|GetSystemInfo/]
   ];
   var FOLDER_MAP = [
     [/^(cou|counter|cs)/i, 'COU'], [/^debug/i, 'DEBUG'], [/^(act|activity)/i, 'ACT'],
-    [/^itp/i, 'ITP'], [/^(msg|message)/i, 'MSG'], [/^edc/i, 'EDC'], [/^cms/i, 'CMS'], [/^(smf|signon)/i, 'SMF'], [/^pms/i, 'PMS']
+    [/^itp/i, 'ITP'], [/^(msg|message)/i, 'MSG'], [/^edc/i, 'EDC'], [/^cms/i, 'CMS'], [/^(smf|signon)/i, 'SMF'], [/^pms/i, 'PMS'], [/^winevent/i, 'WIN']
   ];
 
   function detectType(entries, path) {

@@ -138,9 +138,9 @@
         <span class="sub">เลือกห้องและช่วงเวลา → คัดลอก SQL ไปรันใน SSMS → เปิดโฟลเดอร์ที่ได้ในเว็บนี้</span>
       </div>
       <ol class="pull-steps">
-        <li><b>เลือกห้อง log</b> และ<b>ช่วงเวลา</b>ด้านล่าง</li>
+        <li><b>เลือกห้อง log</b>, <b>ช่วงเวลา</b> และ <b>Windows Event Log</b> (Application / System) ด้านล่าง</li>
         <li>กด <b>คัดลอก SQL</b> แล้ววางใน SSMS ที่ต่อเครื่องสาขาไว้ กด Execute (รันแบบ<b>ทดสอบ</b>ก่อน: แสดงรายการไฟล์ ไม่ copy)</li>
-        <li>รายการถูกต้อง → ติ๊ก "ทดสอบ" ออก คัดลอก SQL ใหม่แล้วรันอีกครั้ง ไฟล์จะไปอยู่ที่ <code>C:\pull_log\&lt;ชื่อเครื่อง&gt;_&lt;วันเวลา&gt;\</code> ของเครื่องสาขา</li>
+        <li>รายการถูกต้อง → ติ๊ก "ทดสอบ" ออก คัดลอก SQL ใหม่แล้วรันอีกครั้ง ไฟล์จะไปอยู่ที่ <code>C:\pull_log\&lt;ชื่อเครื่อง&gt;_&lt;วันเวลา&gt;\</code> ของเครื่องสาขา (event log อยู่ในโฟลเดอร์ย่อย <code>WINEVENT</code>)</li>
         <li>เปิดโฟลเดอร์นั้นผ่าน <code>\\IP\C$\pull_log</code> แล้วลากเข้าเว็บ (แท็บแรก) จากนั้นลบโฟลเดอร์บนเครื่องสาขา</li>
       </ol>
 
@@ -186,6 +186,17 @@
           <label class="chk"><input type="checkbox" id="pullDry" checked> ทดสอบ (DryRun) แสดงรายการไฟล์ ไม่ copy</label>
           <label class="chk"><input type="checkbox" id="pullStartup" checked> แนบ log startup ของวันที่เลือกเสมอ</label>
           <span class="hint">log startup (logstartup, StartUpLog, DebugStartupLog) มักเขียนตอนเปิดเครื่องตอนเช้า จึงอาจไม่อยู่ในช่วงเวลาที่เลือก</span>        </fieldset>
+
+        <fieldset class="pull-box">
+          <legend>4. Windows Event Log (ช่วงเวลาเดียวกัน)</legend>
+          <div class="room-list" id="pullEvLogs"></div>
+          <label>ระดับ
+            <select id="pullEvAll"><option value="0">Error / Warning + ปิด-เปิดเครื่อง</option><option value="1">ทุกระดับ (รวม Information)</option></select>
+          </label>
+          <label class="chk"><input type="checkbox" id="pullEvShow" checked> แสดงในผลลัพธ์ของ SSMS</label>
+          <label class="chk"><input type="checkbox" id="pullEvSave" checked> บันทึกไฟล์ใน pull_log (โฟลเดอร์ WINEVENT)</label>
+          <span class="hint">ปิด-เปิดเครื่อง = Event ID 41, 1074, 6005, 6006, 6008, 6009, 6013 ดึงมาเสมอ · ไฟล์ที่บันทึกลากเข้าเว็บนี้ได้ จะขึ้นเป็น log "Windows Event"</span>
+        </fieldset>
         </div>
       </div>
 

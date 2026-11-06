@@ -17,7 +17,7 @@ var PULL_ROOMS = [
   { id: 'COU',           path: 'COU\\Log',                series: [['log_*', 0]],                                        ex: 'log_20261024.txt' }
 ];
 var PULL_KEY = 'posLogTimeline.pull.v1';
-var PULL_VER = 'รุ่น 2026-11-04f (Event Log + ข้อมูลเครื่อง)';
+var PULL_VER = 'รุ่น 2026-11-06a (สร้างโฟลเดอร์ pull_log เสมอ)';
 // Windows Event Log (Get-EventLog, PowerShell 2.0+). Saved files go to <pull folder>\WINEVENT\EVENT_<log>.txt
 var PULL_EVLOGS = [
   { id: 'Application', ex: 'Application Error / Application Hang / .NET Runtime ของโปรแกรม POS' },
@@ -68,7 +68,7 @@ function pullEvPs() {
     "if($show){foreach($r in $rows){$x='  '+$r[0].Substring(0,19)+'  '+$r[1]+'  '+$r[3]+' ('+$r[2]+')  '+$r[4];if($x.Length -gt 250){$x=$x.Substring(0,250)};W $x}};",
     "if($save){if($dry){W ('  DRY RUN: '+$ln+' not saved')}elseif($rows.Count){try{if(-not(Test-Path $out)){New-Item -Path $out -ItemType Directory -Force -ErrorAction Stop|Out-Null};",
     "$p=Join-Path $out ('EVENT_'+$ln+'.txt');$txt=@();foreach($r in $rows){$txt+=$r[0]+'|'+$r[1]+'|'+$r[2]+'|'+$r[3]+'||log.win.'+$ln.ToLower()+'|WIN|'+$r[3]+'|'+$r[1]+'|'+$r[2]+'|'+$r[4]};",
-    "[IO.File]::WriteAllLines($p,[string[]]$txt,(New-Object Text.UTF8Encoding($true)));W ('SAVE '+$p)}catch{W ('ERR  EVENT '+$ln+' : '+$_.Exception.Message)}}}};",
+    "[IO.File]::WriteAllLines($p,[string[]]$txt,(New-Object Text.UTF8Encoding($true)));W ('SAVE '+$p)}catch{W ('ERR  EVENT '+$ln+' : '+$_.Exception.Message)}}else{W ('  '+$ln+' : no event in this time range, no file saved')}}};",
     "W 'DONE EVENT'"
   ].join('');
 }
@@ -103,6 +103,16 @@ function pullSysPs() {
     "if($save){if($dry){W '  DRY RUN: SYSINFO not saved'}else{try{if(-not(Test-Path $out)){New-Item -Path $out -ItemType Directory -Force -ErrorAction Stop|Out-Null};$fp=Join-Path $out 'SYSINFO.txt';",
     "[IO.File]::WriteAllLines($fp,[string[]]$o,(New-Object Text.UTF8Encoding($true)));W ('SAVE '+$fp)}catch{W ('ERR  SYSINFO : '+$_.Exception.Message)}}};",
     "W 'DONE SYSINFO'"
+  ].join('');
+}
+
+/* Creates the shared pull folder up front (real run only), so it exists even when no log room is chosen
+   and only Event Log / SYSINFO are pulled. {STAMP} filled by SQL REPLACE. */
+function pullDirPs() {
+  return [
+    "$out='C:\\pull_log\\'+$env:COMPUTERNAME+'_{STAMP}';",
+    "try{if(-not(Test-Path $out)){New-Item -Path $out -ItemType Directory -Force -ErrorAction Stop|Out-Null};[Console]::WriteLine('TO   '+$out)}",
+    "catch{[Console]::WriteLine('ERR  cannot create '+$out+' : '+$_.Exception.Message)}"
   ].join('');
 }
 
@@ -142,6 +152,14 @@ function pullSql(o) {
     '-- ชื่อโฟลเดอร์ร่วมกันของ log และ event log: C:\\pull_log\\<ชื่อเครื่อง>_<yyyyMMdd_HHmmss>',
     "DECLARE @Stamp varchar(15) = CONVERT(varchar(8), GETDATE(), 112) + '_' + REPLACE(CONVERT(varchar(8), GETDATE(), 108), ':', '');",
     'DECLARE @ps varchar(8000), @cmd varchar(8000);',
+    '',
+    '-- สร้างโฟลเดอร์ pull_log ก่อนเสมอตอน copy จริง (แม้ไม่ได้เลือกห้อง log)',
+    "IF @DryRun = 0 AND (REPLACE(@Rooms, ' ', '') <> '' OR (REPLACE(@EvLogs, ' ', '') <> '' AND @EvSave = 1) OR (@SysInfo = 1 AND @SysSave = 1))",
+    'BEGIN',
+    "  SET @ps = REPLACE('" + sq(pullDirPs()) + "', '{STAMP}', @Stamp);",
+    "  SET @cmd = 'powershell -NoProfile -NonInteractive -Command \"' + @ps + '\"';",
+    '  EXEC master..xp_cmdshell @cmd;',
+    'END;',
     '',
     "IF REPLACE(@Rooms, ' ', '') <> ''",
     'BEGIN',
